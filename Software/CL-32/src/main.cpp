@@ -6,7 +6,6 @@
 #include <esp_wifi.h>
 #include <esp_now.h>
 
-#include <CL_32_logo.h>
 #include <CL32_logo.h>
 
 #include <GxEPD2_BW.h>
