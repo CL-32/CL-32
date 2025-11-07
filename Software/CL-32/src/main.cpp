@@ -605,11 +605,11 @@ void drawScreen(bool bFull) {
     else{
       display.print(sMenu[iMode-1]);
     }
-    display.setCursor((display.width()/2)-91,10);
+    display.setCursor((display.width()/2)-(iFontW*2.5),10);
     char sTemp[32];
     getTime();
     getBattery();
-    sprintf(sTemp, "%02d:%02d %04d %02d %02d", CL32time.tm_hour, CL32time.tm_min,iVolt,iPercent,iLoad);
+    sprintf(sTemp, "%02d:%02d", CL32time.tm_hour, CL32time.tm_min);
     display.print(sTemp);
     //display.print("12:34");
     if(unread){
