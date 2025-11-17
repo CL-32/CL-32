@@ -28,10 +28,6 @@ struct FolderData {
     char name[30];
 };
 
-
-
-SPIClass hspi(HSPI);
-
 class CL32_file{
 public:
 	CL32_file();

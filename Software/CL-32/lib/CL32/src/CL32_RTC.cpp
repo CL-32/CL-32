@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include "CL32.h"
 #include "CL32_rtc.h"
 
 
@@ -9,7 +8,7 @@ CL32_rtc::CL32_rtc() {
     Wire.begin(CL32_sda,CL32_scl);
 }
 
-void CL32_rtc::rtcInit(){   
+void CL32_rtc::init(){   
     //set the defaults
     Wire.beginTransmission(RTC_ADDRESS);
     Wire.write(0xc0);//setting for backup fallover
@@ -42,6 +41,8 @@ void CL32_rtc::loadTime(){
     _CL32time.tm_mon = (((bData >> 4) & 1) * 10 + (bData & 0xf)) -1; // 0-11 
     bData = Wire.read();    
     _CL32time.tm_year = 100 + ((bData >> 4) * 10) + (bData & 0xf);
+    //update timetext variable
+    sprintf(timeText, "%02d:%02d", _CL32time.tm_hour, _CL32time.tm_min);
 }
 
 void CL32_rtc::saveTime(struct tm timeIn){
@@ -78,11 +79,4 @@ void CL32_rtc::saveTime(struct tm timeIn){
     bData |= (timeIn.tm_year % 10);
     Wire.write(bData);
     Wire.endTransmission();
-}
-
-char* CL32_rtc::timeText(){
-    //get some easy printable time
-    char sTemp[32];
-    sprintf(sTemp, "%02d:%02d", _CL32time.tm_hour, _CL32time.tm_min);
-    return sTemp;
 }

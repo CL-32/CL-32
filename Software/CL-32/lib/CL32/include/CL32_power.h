@@ -2,9 +2,6 @@
 #define CL32_power_h
 #include "Arduino.h" 
 
-
-const byte BATTERY_ADDRESS = 0x36;
-
 class CL32_power{
 public:
 	CL32_power();

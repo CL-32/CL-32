@@ -1,5 +1,6 @@
 #ifndef CL32_keyboard_h
 #define CL32_keyboard_h
+#include "CL32_pins.h"
 #include "Arduino.h" 
 
 const byte KB_ADDRESS = 0x34;
@@ -15,30 +16,40 @@ struct Key {
 enum toggleState {UNPRESSED, ONEPRESS, LOCKPRESS}; 
 
 //some keyboard things mapping to make things readable
-const byte KB_SHIFT = 225;
-const byte KB_RET = 40;
-const byte KB_ESC = 41;
-const byte KB_BSP = 42;
-const byte KB_TAB = 43;
-const byte KB_F1 = 58;
-const byte KB_F10 = 67;
-const byte KB_F11 = 68;
-const byte KB_RGHT = 79;
-const byte KB_LEFT = 80;
-const byte KB_DOWN = 81;
-const byte KB_UP = 82;
+extern byte KB_SHIFT;
+extern byte KB_RET;
+extern byte KB_ESC;
+extern byte KB_BSP;
+extern byte KB_TAB;
+extern byte KB_F1;
+extern byte KB_F10;
+extern byte KB_F11;
+extern byte KB_RGHT;
+extern byte KB_LEFT;
+extern byte KB_DOWN;
+extern byte KB_UP;
+
+struct Event {
+  int keyData;
+  bool keyDown;
+  bool isChar;
+};
 
 class CL32_keyboard {
 	using CL32_KB_t = void (*)(void);
 public:
 	CL32_keyboard();
-	void keyboardInit();
-	byte keyboardRead();
+	void init();
+	void read();
     void add_callback(CL32_KB_t act);
-private:
+	Event getKey();
+	byte eventCount();
 	toggleState _shift;
 	toggleState _fn;
+private:
 	Key _matrix[80];
 	CL32_KB_t _action;
+	Event _eventLog[20];
+	byte _eventCount;
 };
 #endif

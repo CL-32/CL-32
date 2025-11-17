@@ -1,17 +1,16 @@
 #ifndef CL32_rtc_h
 #define CL32_rtc_h
 #include "Arduino.h" 
+#include "CL32_pins.h"
 
-
-const byte RTC_ADDRESS = 0x51;
 
 class CL32_rtc{
 public:
 	CL32_rtc();
-	void rtcInit();
+	void init();
     void loadTime();
     void saveTime(struct tm timeIn);
-    char * timeText();
+    char timeText[6];
 private:
     struct tm _CL32time;
 };
