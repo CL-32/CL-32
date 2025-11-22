@@ -6,14 +6,17 @@
 
 
 CL32_file::CL32_file() {
-    
+  iPage = 10;  
+  iFil = 0;
+  iFol = 0;  
 }
 
 void CL32_file::listFile(){
-  _iFiles = 0;
+  iFiles = 0;
+  _screen.showMsg("Getting Files");
   //use the non standard spi pin connection to start an sd card
   if(SD.begin(CL32_sd_cs,hspi)){
-    File curFile = SD.open(_filePath);
+    File curFile = SD.open(filePath);
     while (true) {
       File entry =  curFile.openNextFile();
       if (! entry) {
@@ -21,14 +24,15 @@ void CL32_file::listFile(){
         break;
       }
       if (entry.isDirectory() == false) {
-        sprintf(_sFileList[_iFiles], "%s", entry.name());
-        _iFiles++;
+        sprintf(sFileList[iFiles], "%s", entry.name());
+        iFiles++;
       }
       entry.close();
     } 
   }
   else{
-    _iFiles = -1;
+    iFiles = -1;
+    _screen.showMsg("SD Card Fail");
   }
   SD.end();
 }
@@ -43,30 +47,31 @@ void CL32_file::saveFolder(File dir, int depth, FolderData* parent) {
       break;
     }
     if (entry.isDirectory()) {
-      _FolderList[_iFolders].layer = depth;
-      sprintf(_FolderList[_iFolders].name,"%s" ,entry.name());
-      _FolderList[_iFolders].parent = parent;
-      _iFolders++;//increment it here so the funcion call has the corect value for a new entry
-      saveFolder(entry, depth + 1,&_FolderList[_iFolders-1]);//folders count has already been incremented, so we need to knock it back one
+      FolderList[iFolders].layer = depth;
+      sprintf(FolderList[iFolders].name,"%s" ,entry.name());
+      FolderList[iFolders].parent = parent;
+      iFolders++;//increment it here so the funcion call has the corect value for a new entry
+      saveFolder(entry, depth + 1,&FolderList[iFolders-1]);//folders count has already been incremented, so we need to knock it back one
     }
     entry.close();
   }
 }
 
 void CL32_file::listFolder(){
-  _iFolders = 0;
+  iFolders = 0;
+  _screen.showMsg("Getting Folders");
   //use the non standard spi pin connection to start an sd card
   if(SD.begin(CL32_sd_cs,hspi)){
     File curFile = SD.open("/");
     //need to save the root folder
-    _FolderList[_iFolders].layer = 0;
-    sprintf(_FolderList[_iFolders].name,"%s","/");
-    _FolderList[_iFolders].parent = NULL;
-    _iFolders++;
-    saveFolder(curFile,1,&_FolderList[_iFolders-1]);
+    FolderList[iFolders].layer = 0;
+    sprintf(FolderList[iFolders].name,"%s","//");
+    FolderList[iFolders].parent = NULL;
+    iFolders++;
+    saveFolder(curFile,1,&FolderList[iFolders-1]);
   }
   else{
-    _iFolders = -1;
+    iFolders = -1;
   }
   SD.end();
 }
@@ -107,7 +112,7 @@ void CL32_file::readFile(){
   //local file read variable
   File curFile;
   char fullFileName[200];
-  sprintf(fullFileName,"%s/%s",_filePath,_fileName);
+  sprintf(fullFileName,"%s/%s",filePath,fileName);
   //use the non standard spi pin connection to start an sd card
   if(SD.begin(CL32_sd_cs,hspi)){
     if(SD.exists(fullFileName)){
@@ -119,7 +124,7 @@ void CL32_file::readFile(){
           for(unsigned int i=0;i<_fileSize;i++){
             _fileBuffer[i] = curFile.read();         // Read the file into the buffer.
           }
-          _windowX=_windowY=0;//reset
+          iWindowX=iWindowY=0;//reset
           getLines();
         }
         curFile.close();          
@@ -130,7 +135,7 @@ void CL32_file::readFile(){
     }
   }
   else{
-    Serial.print("SD Card Fail");
+    _screen.showMsg("SD Card Fail");
   }
   SD.end();
 }
@@ -139,7 +144,7 @@ void CL32_file::getPath(FolderData* input){
   if(input->parent!=NULL){
     getPath(input->parent);
   }
-  sprintf(_filePath,"%s/%s",_filePath,input->name);
+  sprintf(filePath,"%s/%s",filePath,input->name);
 }
 
 void CL32_file::getWindow(){
@@ -148,10 +153,10 @@ void CL32_file::getWindow(){
   //count the lines we are reading, and also use that to offset the x in the future too
   //the scroll of will nudge the window down as you scroll to the end of the window, and back up
   //in the same fashion
-  unsigned int thisLine = _windowY;
+  unsigned int thisLine = iWindowY;
   unsigned int thisChar;
   for(int y = 0;y<windowH;y++){
-    thisChar = _lineNumbers[thisLine].start+_windowX;
+    thisChar = _lineNumbers[thisLine].start+iWindowX;
     for(int x = 0;x<windowW;x++){
       if (thisLine > _lineCount){
         //if this happens, we have run out of lines in the file. just fill the space with nothing
@@ -211,11 +216,11 @@ void CL32_file::moveCursor(byte distance,char direction){
     if(iRow<0){
       //gone too far, step back
       iRow = 0;
-      _windowY = 0;
+      iWindowY = 0;
     }
-    else if(iRow<(_windowY)){
+    else if(iRow<(iWindowY)){
       //if we have dropped off the bottom of the window, lets move the window
-      _windowY--;
+      iWindowY--;
     }
   }
   if(direction=='S'){
@@ -225,15 +230,15 @@ void CL32_file::moveCursor(byte distance,char direction){
       iRow = _lineCount;
       if(_lineCount<windowH){
         //there are less lines than the height of the window, revert to 0
-        _windowY = 0;
+        iWindowY = 0;
       }
       else{
-        _windowY = _lineCount-windowH;
+        iWindowY = _lineCount-windowH;
       }
     }
-    else if(iRow>(_windowY+windowH-1)){
+    else if(iRow>(iWindowY+windowH-1)){
       //if we have dropped off the bottom of the window, lets move the window
-      _windowY++;
+      iWindowY++;
     }
   }
   if(direction=='E'){
@@ -241,25 +246,25 @@ void CL32_file::moveCursor(byte distance,char direction){
     if(iCol > _lineLength-1){
       iCol=_lineLength-1;
       if(_lineLength-2<windowW){
-        _windowX=0;
+        iWindowX=0;
       }
       else{
-        _windowX = _lineLength-windowW+2;
+        iWindowX = _lineLength-windowW+2;
       }
     }
-    else if(iCol>(_windowX+windowW-3)){
-      _windowX++;
+    else if(iCol>(iWindowX+windowW-3)){
+      iWindowX++;
     }
   }
   if(direction=='W'){
     iCol=iCol-distance;
     if(iCol < 0){
       iCol=0;
-      _windowX=0;
+      iWindowX=0;
     }
-    else if(iCol<(_windowX)){
+    else if(iCol<(iWindowX)){
       //if we have dropped off the bottom of the window, lets move the window
-      _windowX--;
+      iWindowX--;
     }
   }
   //the cursor could now be in no mans land at the end of a line that is
@@ -274,4 +279,12 @@ void CL32_file::moveCursor(byte distance,char direction){
   //     }
   //   }
   // }
+}
+
+char* CL32_file::getFilename(){
+  return fileName;
+}
+
+char* CL32_file::windowChar(u_int16_t x, u_int16_t y){
+  return &_codeLines[y][x].val;
 }

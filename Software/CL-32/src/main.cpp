@@ -8,7 +8,7 @@ void setup() {
     _time.init();
     _keys.add_callback(menu_keys);
     Serial.begin(115200);
-    draw_menu();
+    draw_menu(false);
 }
 
 void loop() {

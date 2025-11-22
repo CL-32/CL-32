@@ -12,15 +12,21 @@ void CL32_screen::init(){
     display.epd2.selectSPI(hspi, SPISettings(4000000, MSBFIRST, SPI_MODE0));
     display.init(115200); 
     display.setRotation(3);
+    display.setTextWrap(false);
     display.setFullWindow();
     display.fillScreen(GxEPD_WHITE);
     display.drawBitmap((display.width()/2) -148,(display.height()/2)-64,image_data_cl32_logo,296,128,GxEPD_WHITE,GxEPD_BLACK);
     display.display(true); // full update
     display.hibernate();
-
 }
 
-void CL32_screen::clearScreen(bool isBlack){
+void CL32_screen::clearScreen(bool isBlack, bool goFast){
+    if(goFast){
+        display.setPartialWindow(0,0,display.width(),display.height());
+    }
+    else{
+        display.setFullWindow();
+    }
     display.fillScreen(isBlack ? GxEPD_BLACK:GxEPD_WHITE);
 }
 
@@ -128,7 +134,31 @@ void CL32_screen::addHead(String title){
      
 }
 
-void CL32_screen::show(bool goFast){
-    display.display(!goFast); // full update
+void CL32_screen::showMsg(char *textIn){
+    int16_t x, y, iPad = 10;
+    uint16_t w, h;
+    display.setFont(&FreeMono12pt7b);
+    display.getTextBounds(textIn,0,50,&x,&y,&w,&h);
+    x = (display.width() - w)/2;
+    y = (display.height() - h)/2;
+    display.setPartialWindow(0,0,display.width(),display.height());
+    display.fillRect(x-iPad,y-iPad,w+(iPad*2),h+(iPad*2),GxEPD_BLACK);
+    display.fillRect(x-(iPad/2),y-(iPad/2),w+iPad,h+iPad,GxEPD_WHITE);
+    display.setCursor(x,y+((h+iPad)/2));
+    display.print(textIn);
+    display.display(true);
     display.hibernate();
+}
+
+void CL32_screen::show(bool goFast){
+    display.display(goFast); // full update
+    display.hibernate();
+}
+
+int CL32_screen::width(){
+    return display.width();
+}
+
+int CL32_screen::height(){
+    return display.height();
 }

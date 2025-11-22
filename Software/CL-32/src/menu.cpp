@@ -3,19 +3,19 @@
 
 void change_app(bool increment){
     if(increment){
-        switch (currentApp) {
-            case EDIT: currentApp =  CALC; break;
-            case CALC: currentApp = BEEP; break;
-            case BEEP: currentApp =  SET; break;
-            case SET: currentApp = EDIT;
+        switch (newApp) {
+            case EDIT: newApp =  CALC; break;
+            case CALC: newApp = BEEP; break;
+            case BEEP: newApp =  SET; break;
+            case SET: newApp = EDIT;
         }
     }
     else{
-        switch (currentApp) {
-            case EDIT: currentApp =  SET; break;
-            case CALC: currentApp = EDIT; break;
-            case BEEP: currentApp =  CALC; break;
-            case SET: currentApp = BEEP;
+        switch (newApp) {
+            case EDIT: newApp =  SET; break;
+            case CALC: newApp = EDIT; break;
+            case BEEP: newApp =  CALC; break;
+            case SET: newApp = BEEP;
         }
     }
 }
@@ -32,9 +32,13 @@ void menu_keys(){
                 else if(eTemp.keyData==KB_UP){
                     change_app(false);
                 }
-                else if(eTemp.keyData==KB_F11||eTemp.keyData==KB_RET){
-                    //selecting a menu item is kinda the same as pressing the menu button agagin
-                    isMenu = OFF;
+                else if(eTemp.keyData==KB_RET){
+                    currentApp = newApp;
+                    isMenu = OFF;//take it out of menu mode
+                }
+                else if(eTemp.keyData==KB_TAB){
+                    _screen.showMsg("Testing this message box");
+                    delay(500);
                 }
             }
             //dont really need an else here, if its not the 3 char's we aee interested in, then we dont neeed that key
@@ -43,21 +47,20 @@ void menu_keys(){
     if(isMenu==OFF){        
         if(currentApp==EDIT){
             _keys.add_callback(editor_keys);
-            draw_editor();
+            draw_editor(false);
         }
     }
     else{
-        draw_menu();
+        draw_menu(true);
     }
 } 
 
 //function for drawing the menu
-void draw_menu(){
-    _screen.clearScreen(false);
-    _screen.setFont(12,true,false);
+void draw_menu(bool goFast){
+    _screen.clearScreen(false,goFast);
     _screen.addHead("Menu");
     for(byte i = 0;i<4;i++){
-        if(i==currentApp){
+        if(i==newApp){
             _screen.setFont(12,true,false);
         }
         else{
@@ -65,5 +68,5 @@ void draw_menu(){
         }
         _screen.addText(appNames[i],20,40+(i*20),true);
     }
-    _screen.show(false);
+    _screen.show(goFast);
 }

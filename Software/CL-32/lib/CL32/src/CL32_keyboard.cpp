@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include "CL32.h"
 #include "CL32_keyboard.h"
 
 //some keyboard things mapping to make things readable
@@ -8,9 +9,9 @@ byte KB_RET = 40;
 byte KB_ESC = 41;
 byte KB_BSP = 42;
 byte KB_TAB = 43;
-byte KB_F1 = 58;
-byte KB_F10 = 67;
-byte KB_F11 = 68;
+byte KB_FN = 58;
+byte KB_FILE = 67;
+byte KB_MENU = 68;
 byte KB_RGHT = 79;
 byte KB_LEFT = 80;
 byte KB_DOWN = 81;
@@ -43,7 +44,7 @@ CL32_keyboard::CL32_keyboard() {
     _matrix[18] = {'j',     'J',    ';',    true};
     _matrix[19] = {'k',     'K',	'{',    true};
     _matrix[20] = { 0 ,	    0 ,	    0 ,     0 };
-    _matrix[21] = {KB_F1,   KB_F1,  KB_F1,  false};
+    _matrix[21] = {KB_FN,   KB_FN,  KB_FN,  false};
     _matrix[22] = {'z',     'Z',	' ',    true};
     _matrix[23] = {'x',     'X',	'\\',   true};
     _matrix[24] = {'c',     'C',	'~',    true};
@@ -77,8 +78,8 @@ CL32_keyboard::CL32_keyboard() {
     _matrix[52] = {'5',     '5',    '5',    true};
     _matrix[53] = {'4',     '4',    '4',    true};
     _matrix[54] = {'*',     '*',    '*',    true};
-    _matrix[55] = {KB_F10,  KB_F10, KB_F10, false};
-    _matrix[56] = {KB_F11,  KB_F11, KB_F11, false};
+    _matrix[55] = {KB_FILE, KB_FILE,KB_FILE,false};
+    _matrix[56] = {KB_MENU, KB_MENU,KB_MENU,false};
     _matrix[57] = {KB_BSP,  KB_BSP, KB_BSP, false};
     _matrix[58] = {'p',     'P',    'p',    true};
     _matrix[59] = {'o',     'O',    'o',    true};
@@ -130,7 +131,7 @@ void CL32_keyboard::init(){
 void CL32_keyboard::read(){
     
   byte bCount, bEvent, bEventCode, bStatus;
-  bool bEventStat;
+  bool bEventStat, bRefresh = false;
   Wire.beginTransmission(KB_ADDRESS);
   Wire.write(0x02);//0x02 is the interrupt register
   Wire.endTransmission();
@@ -165,26 +166,33 @@ void CL32_keyboard::read(){
       bEventStat = (bEvent & 0x80)>>7;
       //lets process shift/fn here, so we dont have to do it later
       if(bEventStat==1){//we only care about button going down at the moment
+        bRefresh = true;//flag that there is something to update, even if its not being added to the buffer
         if(_matrix[bEventCode].lower==KB_SHIFT){
-            if(_shift==UNPRESSED){//we are not at lock yet
-                _shift=ONEPRESS;
-            }
-            else if(_shift==ONEPRESS){
-                _shift=LOCKPRESS;
-            }
-            else{//its locked, a further press will reset
-                _shift=UNPRESSED;
+            switch (_shift) {
+                case UNPRESSED: _shift =  ONEPRESS; break;
+                case ONEPRESS: _shift = LOCKPRESS; break;
+                case LOCKPRESS: _shift = UNPRESSED;
             }
         }
-        else if(_matrix[bEventCode].lower==KB_F1){
-            if(_fn==UNPRESSED){//we are not at lock yet
-                _fn=ONEPRESS;
+        else if(_matrix[bEventCode].lower==KB_FN){
+            switch (_fn) {
+                case UNPRESSED: _fn =  ONEPRESS; break;
+                case ONEPRESS: _fn = LOCKPRESS; break;
+                case LOCKPRESS: _fn = UNPRESSED;
             }
-            else if(_fn==ONEPRESS){
-                _fn=LOCKPRESS;
+        }
+        else if(_matrix[bEventCode].lower==KB_MENU){
+            switch (isMenu) {
+                case OFF: isMenu =  ON; break;
+                case ON: isMenu = OFF; break;
+                case SUB: isMenu = ON;
             }
-            else{//if its locked then a further press will reset
-                _fn=UNPRESSED;
+        }
+        else if(_matrix[bEventCode].lower==KB_FILE){
+            switch (isMenu) {
+                case OFF: isMenu =  SUB; break;
+                case SUB: isMenu = OFF;
+                //if the menu is on, we dont do anything, the file button is redundant when in the menu mode
             }
         }
         else{
@@ -215,7 +223,7 @@ void CL32_keyboard::read(){
     Wire.endTransmission();
     //need to trigger the callback function for whatever app is live
     //we only need to trigger the callback if there is anything to process
-    if(_eventCount>0){
+    if(bRefresh){
         _action();
     }
   }

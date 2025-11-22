@@ -11,23 +11,31 @@
 extern CL32_screen _screen;
 extern CL32_keyboard _keys;
 extern CL32_rtc _time;
+extern CL32_file _code;
 
 enum MenuState {ON,OFF,SUB};      
 extern MenuState isMenu;          
 
 enum AppList {EDIT,CALC,BEEP,SET};      
-extern AppList currentApp;         
+extern AppList currentApp, newApp;         
 extern const String appNames[];  
 
+
+extern int iFontH;
+extern int iFontW;
 
 //callback function for deciding what the menu does with the keyboard events
 void menu_keys();
 //function for drawing the menu
-void draw_menu();
+void draw_menu(bool goFast);
 //callback function for deciding what to do with keyboard events
 void editor_keys();
 //function for drawing the editor screen
-void draw_editor();
+void draw_editor(bool goFast);
+//callback function for deciding what to do with keyboard events
+void browser_keys();
+//function for drawing the file browser screen
+void draw_browser(bool goFast);
 
 
 #endif

@@ -1,32 +1,113 @@
 #include "CL32.h"
 #include <Arduino.h> 
 
+enum subMenu {RUN,OPEN,SAVE,NEW};
+subMenu current;
+String menuNames[] = { "Run File", "Open File", "Save File", "New File" }; 
+
+void move_menu(bool increment){
+    if(increment){
+        switch (current) {
+            case RUN: current =  OPEN; break;
+            case OPEN: current = SAVE; break;
+            case SAVE: current =  NEW; break;
+            case NEW: current = RUN;
+        }
+    }
+    else{
+        switch (current) {
+            case RUN: current =  NEW; break;
+            case OPEN: current = RUN; break;
+            case SAVE: current =  OPEN; break;
+            case NEW: current = SAVE;
+        }
+    }
+}
+
 //callback function for deciding what to do with keyboard events
 void editor_keys(){
+    bool subRun = false;
     for(byte i = _keys.eventCount();i>0;i--){
         Event eTemp = _keys.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
-                if(eTemp.keyData==KB_F11){
-                    //selecting a menu item is kinda the same as pressing the menu button agagin
-                    isMenu = ON;
+                if(eTemp.keyData==KB_DOWN){
+                    if(isMenu==SUB){
+                        move_menu(true);
+                    }
+                }
+                else if(eTemp.keyData==KB_UP){
+                    if(isMenu==SUB){
+                        move_menu(false);
+                    }
+                }
+                else if(eTemp.keyData==KB_RET){
+                    if(isMenu==SUB){
+                        //need to do stuff depending on what mrnu opton is there
+                        subRun = true;
+                    }
                 }
             }
         }
     }
-    if(isMenu==ON){
+    if(subRun){
+        isMenu = OFF;//take it out of menu mode
+        if(current==OPEN){
+            _keys.add_callback(browser_keys);
+            draw_browser(false);
+        }
+    }
+    else if(isMenu==ON){
         _keys.add_callback(menu_keys);
-        draw_menu();
+        draw_menu(false);
     }
     else{
-        draw_editor();
+        draw_editor(true);
     }
 }
 
 //function for drawing the editor screen
-void draw_editor(){
-    _screen.clearScreen(false);
-    _screen.setFont(12,true,false);
-    _screen.addHead("Editor");
-    _screen.show(false);
+void draw_editor(bool goFast){
+    if(isMenu==SUB){
+        _screen.addBox(1,16,140,90,false,true);
+        _screen.addBox(1,16,140,90,true,false);
+        for(byte i = 0;i<4;i++){
+            if(i==current){
+                _screen.setFont(12,true,false);
+            }
+            else{
+                _screen.setFont(12,false,false);
+            }
+            _screen.addText(menuNames[i],8,36+(i*20),true);
+        }
+    }
+    else{
+        _screen.clearScreen(false,goFast);
+        _screen.setFont(12,true,false);
+        if(strlen(_code.getFilename())==0){
+            _screen.addHead("Editor");
+            _screen.addText("Please Open A File To Edit",40,100,true);
+        }
+        else{
+            _screen.addHead(_code.getFilename());
+            //reload the current view from the big file
+            _code.getWindow();
+            //draw the edit screen
+            for(int y = 0;y<windowH;y++){
+                for(int x = 0;x<windowW;x++){
+                    _screen.setFont(9,false,false);
+                    if(x==_code.iCol-_code.iWindowX && y==_code.iRow-_code.iWindowY){
+                        //we are on the same position as the cursor, lets do things different
+                        _screen.addBox(x*iFontW,(iFontH) + (y * iFontH) + 5,iFontW,iFontH,true,true);
+                        _screen.addText(_code.windowChar(x,y),x*iFontW,(iFontH*2) + (y * iFontH) + 4,false);
+                    }
+                    else{
+                        //normal text
+                        _screen.addText(_code.windowChar(x,y),x*iFontW,(iFontH*2) + (y * iFontH) + 4,true);
+                    }
+                }
+            }
+        }
+    }
+    _screen.show(goFast);
 }

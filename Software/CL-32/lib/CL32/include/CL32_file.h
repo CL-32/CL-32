@@ -40,11 +40,18 @@ public:
     void getWindow();
     void putChar(char charIn,unsigned int charPos);
     void moveCursor(byte distance,char direction);
+    char* getFilename();
+    char* windowChar(u_int16_t x, u_int16_t y);
     int iRow, iCol;
+    unsigned int iWindowX, iWindowY;
+    int iFolders, iFiles, iFol, iFil, iPage;
+    char fileName[20] = {""};
+    char filePath[50] = {"/"};
+    char sFileList[20][50] = {""};
+    FolderData FolderList[50];
 private:
     //this array stores the 'window' of code, it will be populated based on the position of the data within the file
     CharData _codeLines[windowH][windowW] ;
-    unsigned int _windowX, _windowY;
     //the file could be 50 lines of 100 char of text, or could be 1000 lines with 5 chars of text, so it might be handy to have a
     //list of where in the file each line of the text is. therefore we need an array to store that too
     LineData _lineNumbers[1000];
@@ -54,12 +61,7 @@ private:
     //and some variables to store how big things are...
     unsigned int _fileSize, _lineCount;
     int _lineLength;
-    int _iFolders, _iFiles;
     //does the file have windows style carrage return and line feed?
     bool _bCRLF;
-    char _fileName[20] = {""};
-    char _filePath[50] = {"/"};
-    char _sFileList[20][50] = {""};
-    FolderData _FolderList[50];
 };
 #endif

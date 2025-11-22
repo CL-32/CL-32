@@ -15,14 +15,17 @@ class CL32_screen{
 public:
 	//CL32_screen();
 	void init();
-    void clearScreen(bool isBlack);
+    void clearScreen(bool isBlack, bool goFast);
     void setFont(byte fontSize, bool isBold, bool isItalic);
     void addText(char *textIn, int posX, int posY, bool isBlack);
     void addText(String textIn, int posX, int posY, bool isBlack);
     void addLine(int startX, int startY, int endX, int endY, bool isBlack);
     void addBox(int startX, int startY, int sizeX, int sizeY, bool isBlack, bool isFilled);
     void addHead(String title);
+    void showMsg(char *textIn);
     void show(bool goFast);
+    int width();
+    int height();
 private:
     struct tm _CL32time;
 };
