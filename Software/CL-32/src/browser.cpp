@@ -1,7 +1,7 @@
 #include "CL32.h"
 #include <Arduino.h> 
 
-byte iCol;
+byte iTab;
 
 
 //callback function for deciding what to do with keyboard events
@@ -12,9 +12,7 @@ void browser_keys(){
         if(eTemp.keyDown){
             if(!eTemp.isChar){
                 if(eTemp.keyData==KB_DOWN){
-                    if(iCol%2==0){
-                        Serial.println(_code.iFol);
-                        Serial.println(_code.iFolders);
+                    if(iTab%2==0){
                         _code.iFol++;
                         if(_code.iFol>_code.iFolders-1){
                             _code.iFol=_code.iFolders-1;
@@ -33,7 +31,7 @@ void browser_keys(){
                     }
                 }
                 else if(eTemp.keyData==KB_UP){
-                    if(iCol%2==0){
+                    if(iTab%2==0){
                         _code.iFol--;
                         if(_code.iFol<0){
                             _code.iFol=0;
@@ -50,14 +48,14 @@ void browser_keys(){
                     }
                 }
                 else if(eTemp.keyData==KB_LEFT){
-                    iCol = 0;
+                    iTab = 0;
                 }
                 else if(eTemp.keyData==KB_RGHT){
-                    iCol = 1;
+                    iTab = 1;
                 }
                 else if(eTemp.keyData==KB_RET){
-                    if(iCol%2==0){
-                        iCol = 1;
+                    if(iTab%2==0){
+                        iTab = 1;
                     }
                     else{
                         sprintf(_code.fileName,"%s",_code.sFileList[_code.iFil]);
@@ -85,7 +83,7 @@ void browser_keys(){
 void draw_browser(bool goFast){
     if(_code.iFolders==0){
         _code.listFolder();
-        sprintf(_code.filePath,"%s","");
+        sprintf(_code.filePath,"%s","/");
         _code.getPath(&_code.FolderList[_code.iFol]);
         _code.listFile();
     }
@@ -97,13 +95,13 @@ void draw_browser(bool goFast){
     else{
         _screen.addLine(_screen.width()/2,iFontH+2,_screen.width()/2,_screen.height()-1,GxEPD_BLACK);
         _screen.setFont(9,true,false);
-        if(iCol%2==0){
+        if(iTab%2==0){
           _screen.addText("> Folders <",5,(iFontH*2.5) + 6,true);
         }
         else{
           _screen.addText("  Folders  ",5,(iFontH*2.5) + 6,true);
         }
-        if(iCol%2==0){
+        if(iTab%2==0){
           _screen.addText("  Files  ",(_screen.width()/2)+5,(iFontH*2.5) + 6,true);
         }
         else{
@@ -127,6 +125,7 @@ void draw_browser(bool goFast){
         }
 
         for(int f = iMin;f<iMax;f++){
+            Serial.println(_code.FolderList[f].name);
           _screen.setFont(9,_code.iFol==f,false);
           if(strlen(_code.FolderList[f].name)>13){
             char shorter[15];

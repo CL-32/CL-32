@@ -26,6 +26,10 @@ void CL32_file::listFile(){
       if (entry.isDirectory() == false) {
         sprintf(sFileList[iFiles], "%s", entry.name());
         iFiles++;
+        if(iFiles>=250){
+          //if there are too mant files in a folder it will over run the array and corrupt the data, and break everything
+          break;
+        }
       }
       entry.close();
     } 
@@ -50,6 +54,7 @@ void CL32_file::saveFolder(File dir, int depth, FolderData* parent) {
       FolderList[iFolders].layer = depth;
       sprintf(FolderList[iFolders].name,"%s" ,entry.name());
       FolderList[iFolders].parent = parent;
+      Serial.println(FolderList[iFolders].name);
       iFolders++;//increment it here so the funcion call has the corect value for a new entry
       saveFolder(entry, depth + 1,&FolderList[iFolders-1]);//folders count has already been incremented, so we need to knock it back one
     }
@@ -65,7 +70,7 @@ void CL32_file::listFolder(){
     File curFile = SD.open("/");
     //need to save the root folder
     FolderList[iFolders].layer = 0;
-    sprintf(FolderList[iFolders].name,"%s","//");
+    sprintf(FolderList[iFolders].name,"/");
     FolderList[iFolders].parent = NULL;
     iFolders++;
     saveFolder(curFile,1,&FolderList[iFolders-1]);
@@ -160,20 +165,20 @@ void CL32_file::getWindow(){
     for(int x = 0;x<windowW;x++){
       if (thisLine > _lineCount){
         //if this happens, we have run out of lines in the file. just fill the space with nothing
-        _codeLines[y][x].val = 0;
-        _codeLines[y][x].pos = 0;
+        codeLines[y][x].val = 0;
+        codeLines[y][x].pos = 0;
       }
       else{
         //the line is valid, lets check to see if the current x pos has a valid char in it
         if(thisChar>_lineNumbers[thisLine].end){
           //the next char in the array is greater than the end of the line, just pad with 0
-          _codeLines[y][x].val = 0;
-          _codeLines[y][x].pos = 0;
+          codeLines[y][x].val = 0;
+          codeLines[y][x].pos = 0;
         }
         else{
           //should be good to go, lets gos
-          _codeLines[y][x].val = _fileBuffer[thisChar];
-          _codeLines[y][x].pos = thisChar;
+          codeLines[y][x].val = _fileBuffer[thisChar];
+          codeLines[y][x].pos = thisChar;
         }
       }
       thisChar++;
@@ -188,7 +193,7 @@ void CL32_file::putChar(char charIn,unsigned int charPos){
   //and move each char along one until we hit charPos. then insert the new char in there
   //if the char you pass in is the backspace char, then it works the other way, it moves everything
   //forward in the array...
-  if(charIn==8){
+  if(charIn==KB_BSP){
     //delete a char
     for(unsigned int x = charPos;x<_fileSize;x++){
       _fileBuffer[x]=_fileBuffer[x+1];
@@ -286,5 +291,5 @@ char* CL32_file::getFilename(){
 }
 
 char* CL32_file::windowChar(u_int16_t x, u_int16_t y){
-  return &_codeLines[y][x].val;
+  return &codeLines[y][x].val;
 }

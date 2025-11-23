@@ -31,21 +31,42 @@ void editor_keys(){
         Event eTemp = _keys.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
-                if(eTemp.keyData==KB_DOWN){
-                    if(isMenu==SUB){
+                if(isMenu==SUB){
+                    if(eTemp.keyData==KB_DOWN){
                         move_menu(true);
                     }
-                }
-                else if(eTemp.keyData==KB_UP){
-                    if(isMenu==SUB){
+                    else if(eTemp.keyData==KB_UP){
                         move_menu(false);
                     }
-                }
-                else if(eTemp.keyData==KB_RET){
-                    if(isMenu==SUB){
-                        //need to do stuff depending on what mrnu opton is there
+                    else if(eTemp.keyData==KB_RET){
                         subRun = true;
                     }
+                }
+                else{//not the submenu, lets edit
+                    if(eTemp.keyData==KB_DOWN){
+                        _code.moveCursor(1,'S');
+                    }
+                    else if(eTemp.keyData==KB_UP){
+                        _code.moveCursor(1,'N');
+                    }
+                    if(eTemp.keyData==KB_LEFT){
+                        _code.moveCursor(1,'E');
+                    }
+                    else if(eTemp.keyData==KB_RGHT){
+                        _code.moveCursor(1,'W');
+                    }
+                    else if(eTemp.keyData==KB_RET){
+                        _code.putChar(KB_RET,_code.codeLines[_code.iRow][_code.iCol].pos);
+                    }
+                    else if(eTemp.keyData==KB_BSP){
+                        _code.putChar(KB_BSP,_code.codeLines[_code.iRow][_code.iCol].pos);
+                    }
+                }
+                
+            }
+            else{
+                if(isMenu==OFF){
+                        _code.putChar(eTemp.keyData,_code.codeLines[_code.iRow][_code.iCol].pos);
                 }
             }
         }
