@@ -50,23 +50,27 @@ void editor_keys(){
                         _code.moveCursor(1,'N');
                     }
                     if(eTemp.keyData==KB_LEFT){
-                        _code.moveCursor(1,'E');
-                    }
-                    else if(eTemp.keyData==KB_RGHT){
                         _code.moveCursor(1,'W');
                     }
+                    else if(eTemp.keyData==KB_RGHT){
+                        _code.moveCursor(1,'E');
+                    }
                     else if(eTemp.keyData==KB_RET){
-                        _code.putChar(KB_RET,_code.codeLines[_code.iRow][_code.iCol].pos);
+                        _code.putChar(10,_code.codeLines[_code.iRow][_code.iCol].pos);
+                        if(_code.bCRLF){
+                            _code.putChar(13,_code.codeLines[_code.iRow][_code.iCol].pos);
+                        }
                     }
                     else if(eTemp.keyData==KB_BSP){
-                        _code.putChar(KB_BSP,_code.codeLines[_code.iRow][_code.iCol].pos);
+                        //_code.moveCursor(1,'W');
+                        _code.putChar(KB_BSP,_code.codeLines[_code.iRow][_code.iCol].pos-1);
                     }
                 }
-                
             }
             else{
                 if(isMenu==OFF){
-                        _code.putChar(eTemp.keyData,_code.codeLines[_code.iRow][_code.iCol].pos);
+                    _code.putChar(eTemp.keyData,_code.codeLines[_code.iRow][_code.iCol].pos);
+                    _code.moveCursor(1,'E');
                 }
             }
         }

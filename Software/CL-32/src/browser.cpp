@@ -125,7 +125,6 @@ void draw_browser(bool goFast){
         }
 
         for(int f = iMin;f<iMax;f++){
-            Serial.println(_code.FolderList[f].name);
           _screen.setFont(9,_code.iFol==f,false);
           if(strlen(_code.FolderList[f].name)>13){
             char shorter[15];

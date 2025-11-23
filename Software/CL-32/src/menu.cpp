@@ -36,10 +36,6 @@ void menu_keys(){
                     currentApp = newApp;
                     isMenu = OFF;//take it out of menu mode
                 }
-                else if(eTemp.keyData==KB_TAB){
-                    _screen.showMsg("Testing this message box");
-                    delay(500);
-                }
             }
             //dont really need an else here, if its not the 3 char's we aee interested in, then we dont neeed that key
         }

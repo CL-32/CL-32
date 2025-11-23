@@ -54,7 +54,6 @@ void CL32_file::saveFolder(File dir, int depth, FolderData* parent) {
       FolderList[iFolders].layer = depth;
       sprintf(FolderList[iFolders].name,"%s" ,entry.name());
       FolderList[iFolders].parent = parent;
-      Serial.println(FolderList[iFolders].name);
       iFolders++;//increment it here so the funcion call has the corect value for a new entry
       saveFolder(entry, depth + 1,&FolderList[iFolders-1]);//folders count has already been incremented, so we need to knock it back one
     }
@@ -85,14 +84,14 @@ void CL32_file::getLines(){
   //process the file to re-populate the line data
   Serial.println("GetLines");
   _lineLength=_lineCount=0;
-  _bCRLF = false;
+  bCRLF = false;
   //store the first char pos as the 
   _lineNumbers[_lineCount].start = 0;
   for(unsigned int i=0;i<_fileSize;i++){
     //lets see if this char is a newline char windows files have 0D 0A linux files just have 0A
     if(_fileBuffer[i]==13){
       //its a windows style carrage return
-      _bCRLF = true;//flag windows stylee
+      bCRLF = true;//flag windows stylee
     } 
     if(_fileBuffer[i]==10){
       //its a line feed, so the next line starts at the next char...

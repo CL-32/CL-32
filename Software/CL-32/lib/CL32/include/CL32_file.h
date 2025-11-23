@@ -51,6 +51,8 @@ public:
     FolderData FolderList[50];
     //this array stores the 'window' of code, it will be populated based on the position of the data within the file
     CharData codeLines[windowH][windowW] ;
+    //does the file have windows style carrage return and line feed?
+    bool bCRLF;
 private:
     //the file could be 50 lines of 100 char of text, or could be 1000 lines with 5 chars of text, so it might be handy to have a
     //list of where in the file each line of the text is. therefore we need an array to store that too
@@ -61,7 +63,5 @@ private:
     //and some variables to store how big things are...
     unsigned int _fileSize, _lineCount;
     int _lineLength;
-    //does the file have windows style carrage return and line feed?
-    bool _bCRLF;
 };
 #endif
