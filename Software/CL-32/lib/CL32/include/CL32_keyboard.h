@@ -28,6 +28,10 @@ extern byte KB_RGHT;
 extern byte KB_LEFT;
 extern byte KB_DOWN;
 extern byte KB_UP;
+extern byte KB_PG_UP;
+extern byte KB_PG_DN;
+extern byte KB_HOME;
+extern byte KB_END;
 
 struct Event {
   int keyData;

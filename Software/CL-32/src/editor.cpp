@@ -55,6 +55,18 @@ void editor_keys(){
                     else if(eTemp.keyData==KB_RGHT){
                         _code.moveCursor(1,'E');
                     }
+                    if(eTemp.keyData==KB_PG_DN){
+                        _code.moveCursor(12,'S');
+                    }
+                    else if(eTemp.keyData==KB_PG_UP){
+                        _code.moveCursor(12,'N');
+                    }
+                    if(eTemp.keyData==KB_HOME){
+                        _code.moveCursor(999,'W');
+                    }
+                    else if(eTemp.keyData==KB_END){
+                        _code.moveCursor(999,'E');
+                    }
                     else if(eTemp.keyData==KB_RET){
                         _code.putChar(10,_code.codeLines[_code.iRow][_code.iCol].pos);
                         if(_code.bCRLF){
@@ -70,6 +82,7 @@ void editor_keys(){
             else{
                 if(isMenu==OFF){
                     _code.putChar(eTemp.keyData,_code.codeLines[_code.iRow][_code.iCol].pos);
+                    _code.getWindow();
                     _code.moveCursor(1,'E');
                 }
             }

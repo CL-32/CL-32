@@ -16,6 +16,10 @@ byte KB_RGHT = 79;
 byte KB_LEFT = 80;
 byte KB_DOWN = 81;
 byte KB_UP = 82;
+byte KB_PG_UP = 75;
+byte KB_PG_DN = 78;
+byte KB_HOME = 74;
+byte KB_END = 77;
 
 CL32_keyboard::CL32_keyboard() {
     _eventCount= 0;
@@ -58,8 +62,8 @@ CL32_keyboard::CL32_keyboard() {
     _matrix[32] = {'.',     '.',    '.',    true};
     _matrix[33] = {'0',     '0',    '0',    true};
     _matrix[34] = {'+',     '+',    '+',    true};
-    _matrix[35] = {KB_UP,   KB_UP,  KB_UP,  false };
-    _matrix[36] = {KB_RGHT, KB_RGHT,KB_RGHT,false};
+    _matrix[35] = {KB_UP,   KB_UP,  KB_PG_UP,  false };
+    _matrix[36] = {KB_RGHT, KB_RGHT,KB_END,false};
     _matrix[37] = {KB_RET,  KB_RET, KB_RET, false};
     _matrix[38] = {KB_RET,  KB_RET, KB_RET, false};
     _matrix[39] = {'m',     'M',	']',    true};
@@ -68,8 +72,8 @@ CL32_keyboard::CL32_keyboard() {
     _matrix[42] = {'2',     '2',    '2',    true};
     _matrix[43] = {'1',     '1',    '1',    true};
     _matrix[44] = {'-',     '-',    '-',    true};
-    _matrix[45] = {KB_LEFT, KB_LEFT,KB_LEFT,false};
-    _matrix[46] = {KB_DOWN, KB_DOWN,KB_DOWN,false};
+    _matrix[45] = {KB_LEFT, KB_LEFT,KB_HOME,false};
+    _matrix[46] = {KB_DOWN, KB_DOWN,KB_PG_DN,false};
     _matrix[47] = {KB_ESC,  KB_ESC, KB_ESC, false};
     _matrix[48] = {KB_RET,  KB_RET, KB_RET, false};
     _matrix[49] = {'l',     'L',	'}',    true};
@@ -200,7 +204,7 @@ void CL32_keyboard::read(){
             if(_fn!=UNPRESSED){
                 _eventLog[_eventCount] = {_matrix[bEventCode].func,bEventStat,_matrix[bEventCode].isChar};
                 if(_fn==ONEPRESS){//we are not at lock yet
-                    _fn==UNPRESSED;
+                    _fn=UNPRESSED;
                 }
             }
             else if(_shift!=UNPRESSED){

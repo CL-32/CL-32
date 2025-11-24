@@ -5,7 +5,7 @@
 class CL32_power{
 public:
 	CL32_power();
-	void powerInit();
+	void init();
     void loadPower();
     int getVoltage();
     int getPercent();

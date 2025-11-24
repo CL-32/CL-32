@@ -14,6 +14,7 @@ void CL32_rtc::init(){
     Wire.write(0xc0);//setting for backup fallover
     Wire.write(0x20);// not used 0 - clock out 0 - backup switchover 10 - charger resistor (not needed) 00 - charger off 00
     Wire.endTransmission();
+    loadTime();
 }
 
 void CL32_rtc::loadTime(){ 

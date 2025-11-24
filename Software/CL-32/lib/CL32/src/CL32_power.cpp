@@ -9,12 +9,13 @@ CL32_power::CL32_power() {
     Wire.begin(CL32_sda,CL32_scl);
 }
 
-void CL32_power::powerInit(){
+void CL32_power::init(){
     //set some defaults for the power chip
     // Wire.beginTransmission(BATTERY_ADDRESS);
     // Wire.write(0xc0);//setting for backup fallover
     // Wire.write(0x20);// not used 0 - clock out 0 - backup switchover 10 - charger resistor (not needed) 00 - charger off 00
     // Wire.endTransmission();
+    loadPower();
 }
 
 void CL32_power::loadPower(){

@@ -12,6 +12,7 @@ extern CL32_screen _screen;
 extern CL32_keyboard _keys;
 extern CL32_rtc _time;
 extern CL32_file _code;
+extern CL32_power _batt;
 
 enum MenuState {ON,OFF,SUB};      
 extern MenuState isMenu;          

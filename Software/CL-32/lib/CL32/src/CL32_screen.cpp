@@ -90,7 +90,6 @@ void CL32_screen::addHead(String title){
     display.setCursor(0,10);
     display.print(title);
     display.setCursor((display.width()/2)-(12*2.5),10);
-    _time.loadTime();
     display.print(_time.timeText);
     display.setCursor(display.width()-50,10);
     if (_keys._shift==UNPRESSED){
@@ -102,6 +101,16 @@ void CL32_screen::addHead(String title){
     else{
       display.print("ABC");
     }
+    display.setCursor(display.width()-85,10);
+    if (_keys._fn==LOCKPRESS){
+        display.setTextColor(GxEPD_WHITE);
+        display.fillRect(display.width()-85,0,23,12,GxEPD_BLACK);
+        display.print("fn");
+    }
+    else if (_keys._fn==ONEPRESS){
+        display.setTextColor(GxEPD_BLACK);
+        display.print("fn");
+    }
     display.drawLine(display.width()-11,0,display.width()-1,0,GxEPD_BLACK);
     display.drawLine(display.width()-11,12,display.width()-1,12,GxEPD_BLACK);
     display.drawLine(display.width()-11,0,display.width()-11,12,GxEPD_BLACK);
@@ -109,27 +118,28 @@ void CL32_screen::addHead(String title){
     display.drawLine(display.width()-12,2,display.width()-12,12-2,GxEPD_BLACK);
     display.drawLine(display.width()-13,2,display.width()-13,12-2,GxEPD_BLACK);
     //battery bars
-    // if (iVolt > 3300){
-    // display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,GxEPD_BLACK); //3.3v
-    // }
-    // if (iVolt > 3300){
-    //   display.drawLine(display.width()-4,2,display.width()-4,iFontH-2,GxEPD_BLACK); //3.5v
-    // }
-    // if (iVolt > 3700){
-    //   display.drawLine(display.width()-5,2,display.width()-5,iFontH-2,GxEPD_BLACK); //3.7v
-    // }
-    // if (iVolt > 3800){
-    //   display.drawLine(display.width()-6,2,display.width()-6,iFontH-2,GxEPD_BLACK); //3.8v
-    // }
-    // if (iVolt > 3900){
-    //   display.drawLine(display.width()-7,2,display.width()-7,iFontH-2,GxEPD_BLACK); //3.9v
-    // }
-    // if (iVolt > 4000){
-    //   display.drawLine(display.width()-8,2,display.width()-8,iFontH-2,GxEPD_BLACK); //4.0v
-    // }
-    // if (iVolt > 4100){
-    //   display.drawLine(display.width()-9,2,display.width()-9,iFontH-2,GxEPD_BLACK); //4.1v+
-    // }
+    int iVolt = _batt.getVoltage();
+    if (iVolt > 3300){
+    display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,GxEPD_BLACK); //3.3v
+    }
+    if (iVolt > 3300){
+      display.drawLine(display.width()-4,2,display.width()-4,iFontH-2,GxEPD_BLACK); //3.5v
+    }
+    if (iVolt > 3700){
+      display.drawLine(display.width()-5,2,display.width()-5,iFontH-2,GxEPD_BLACK); //3.7v
+    }
+    if (iVolt > 3800){
+      display.drawLine(display.width()-6,2,display.width()-6,iFontH-2,GxEPD_BLACK); //3.8v
+    }
+    if (iVolt > 3900){
+      display.drawLine(display.width()-7,2,display.width()-7,iFontH-2,GxEPD_BLACK); //3.9v
+    }
+    if (iVolt > 4000){
+      display.drawLine(display.width()-8,2,display.width()-8,iFontH-2,GxEPD_BLACK); //4.0v
+    }
+    if (iVolt > 4100){
+      display.drawLine(display.width()-9,2,display.width()-9,iFontH-2,GxEPD_BLACK); //4.1v+
+    }
     display.drawLine(0,12+2,display.width()-1,12+2,GxEPD_BLACK);
      
 }

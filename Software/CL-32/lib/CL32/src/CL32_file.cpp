@@ -247,13 +247,13 @@ void CL32_file::moveCursor(byte distance,char direction){
   }
   if(direction=='E'){
     iCol=iCol+distance;
-    if(iCol > _lineLength-1){
-      iCol=_lineLength-1;
-      if(_lineLength-2<windowW){
+    if(iCol > _lineNumbers[iRow].len){
+      iCol=_lineNumbers[iRow].len;
+      if(_lineNumbers[iRow].len-2<windowW){
         iWindowX=0;
       }
       else{
-        iWindowX = _lineLength-windowW+2;
+        iWindowX = _lineNumbers[iRow].len-windowW+2;
       }
     }
     else if(iCol>(iWindowX+windowW-3)){

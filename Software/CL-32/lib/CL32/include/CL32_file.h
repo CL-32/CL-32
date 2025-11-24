@@ -4,15 +4,15 @@
 #include <SD.h>
 #include <SPI.h>
 
+const byte windowW = 34;
+const byte windowH = 12;
+
 //store the 'window' of code in an array. the struct will let me store more info about each char like the position in the
 //full file and maybe even formatting data for bold and italic later maybe
 struct CharData {
   char val;
   unsigned int pos;
 };
-
-const byte windowW = 34;
-const byte windowH = 12;
 
 //each line has a start and end value, i was just grabbing the next line to get the end of the last one, but that
 //will error if you try that on the last line (or at leas behave strangely) so lets store the start and end for each line
