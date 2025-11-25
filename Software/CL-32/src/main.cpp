@@ -15,16 +15,18 @@ void setup() {
 }
 
 void loop() {
-
+  iLoop++;
   if(not digitalRead(CL32_int)){
+    //the interrupt is shared, so we need to see who is shouting
     _keys.read();
-
+    _time.read();
+    _batt.read();
   }
-  if(iLoop==5000){
+  if(iLoop==5000){//stagger so it doesnt cause slowdown
     //refresh the time on a timer style counter
     _time.loadTime();
   }
-  if(iLoop==10000){
+  if(iLoop==10000){//stagger so it doesnt cause slowdown
     //refresh the battery info on a timer style counter
     _batt.loadPower();
     iLoop = 0;//reset the counter so we dont overflow

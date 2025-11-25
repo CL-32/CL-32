@@ -215,74 +215,46 @@ void CL32_file::moveCursor(byte distance,char direction){
   //its best to have a universal function to decide where the cursor can move, and
   //what to do if it cant move there
   //basically you send how far you want to move (normally 1) and direction N/E/S/W
-  if(direction=='N'){
-    iRow=iRow-distance;
-    if(iRow<0){
-      //gone too far, step back
-      iRow = 0;
-      iWindowY = 0;
-    }
-    else if(iRow<(iWindowY)){
-      //if we have dropped off the bottom of the window, lets move the window
-      iWindowY--;
-    }
+  switch (direction) {
+    case 'N': iRow=iRow-distance; break;
+    case 'S': iRow=iRow+distance; break;
+    case 'W': iCol=iCol-distance; break;
+    case 'E': iCol=iCol+distance;
   }
-  if(direction=='S'){
-    iRow=iRow+distance;
-    if(iRow>_lineCount){
-      //gone too far, step back
-      iRow = _lineCount;
-      if(_lineCount<windowH){
-        //there are less lines than the height of the window, revert to 0
-        iWindowY = 0;
-      }
-      else{
-        iWindowY = _lineCount-windowH;
-      }
-    }
-    else if(iRow>(iWindowY+windowH-1)){
-      //if we have dropped off the bottom of the window, lets move the window
-      iWindowY++;
-    }
+  //we need to sanity check those values, lets start with the column
+  if (iCol < 0){//we cant be any further left than the start of the line
+    iCol = 0;
   }
-  if(direction=='E'){
-    iCol=iCol+distance;
-    if(iCol > _lineNumbers[iRow].len){
-      iCol=_lineNumbers[iRow].len;
-      if(_lineNumbers[iRow].len-2<windowW){
-        iWindowX=0;
-      }
-      else{
-        iWindowX = _lineNumbers[iRow].len-windowW+2;
-      }
-    }
-    else if(iCol>(iWindowX+windowW-3)){
-      iWindowX++;
-    }
+  if (iCol > _lineNumbers[iRow].len){//we cant be any further right than the end of the line
+    iCol = _lineNumbers[iRow].len;
   }
-  if(direction=='W'){
-    iCol=iCol-distance;
-    if(iCol < 0){
-      iCol=0;
-      iWindowX=0;
-    }
-    else if(iCol<(iWindowX)){
-      //if we have dropped off the bottom of the window, lets move the window
-      iWindowX--;
-    }
+  //and now to check the row
+  if (iRow < 0){//we cant be any further up than the start of the file
+    iRow = 0;
   }
-  //the cursor could now be in no mans land at the end of a line that is
-  //sorter than the current pos. lets move left until we find a valid char
-  // for(byte x = iCol;x>0;x--){
-  //   //check to see if there is a position value here, if there is, lets see if its a printable char
-  //   if(codeLines[iRow][x].pos>0){
-  //     //we have a position value. so this is an item from the file. lets check if its printable
-  //     if(codeLines[iRow][x].val!=10&&codeLines[iRow][x].val!=13&&codeLines[iRow][x].val!=0){
-  //       iCol=x;
-  //       break;
-  //     }
-  //   }
-  // }
+  if (iRow > _lineCount-1){//we cant be any further down than the end of the file
+    iRow = _lineCount-1;
+  }
+  //we need to tweak the window to try and keep the cursor in the window, lets try the X
+  if(iCol < windowW/2 || _lineNumbers[iRow].len < windowW){//the cursor wouldnt break the first half of the width, so lets just pop it to 0
+    iWindowX = 0;         //if the line is shorter than the window, then we shouldtn try to scroll
+  }
+  else if(iCol > _lineNumbers[iRow].len - (windowW/2)){//the cursor is on the last half of the window width on the line. so lets move the window as far over as possible 
+    iWindowX =  _lineNumbers[iRow].len - windowW + 3;
+  }
+  else{//the column is somewhere in the middle, lets try and move that window so the cursor is about in the middle too
+    iWindowX = iCol - (windowW/2);
+  }
+  //lets do the Y now...
+  if(iRow < windowH/2 || _lineCount < windowH){//the cursor wouldnt break the first half of the height, so lets just pop it to 0
+    iWindowY = 0;         //if the file is shorter than the window we dont want to try and move the window
+  }
+  else if(iRow > _lineCount - (windowH/2)){//the cursor is on the last half of the window height on the file. so lets move the window as far down as possible 
+    iWindowY =  _lineCount - windowH + 1;
+  }
+  else{//the column is somewhere in the middle, lets try and move that window so the cursor is about in the middle too
+    iWindowY = iRow - (windowH/2);
+  }
 }
 
 char* CL32_file::getFilename(){

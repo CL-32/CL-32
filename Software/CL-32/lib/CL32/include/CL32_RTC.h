@@ -11,6 +11,7 @@ public:
     void loadTime();
     void saveTime(struct tm timeIn);
     char timeText[6];
+    void read();
 private:
     struct tm _CL32time;
 };

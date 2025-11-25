@@ -81,3 +81,34 @@ void CL32_rtc::saveTime(struct tm timeIn){
     Wire.write(bData);
     Wire.endTransmission();
 }
+
+void CL32_rtc::read(){
+    //read/clear the interrupt
+    byte bStatus;
+
+    Wire.beginTransmission(RTC_ADDRESS);
+    Wire.write(0x0d);//0x0d is the status register
+    Wire.endTransmission();
+
+    Wire.requestFrom(RTC_ADDRESS,1);
+    while(Wire.available() < 1);//sit and wait for response
+    //read the value
+    bStatus = Wire.read();
+    if (bStatus!=0){
+        Serial.print("RTC Status ");
+        Serial.print(bStatus,BIN);
+        //10000000 - temp high flag
+        //01000000 - temp low flag
+        //00100000 - time update flag
+        //00010000 - countdown timer flag
+        //00001000 - alarm flag
+        //00000100 - external event flag
+        //00000010 - power on reset
+        //00000001 - low voltage flag
+        //maybe do some stuff here
+        Wire.beginTransmission(RTC_ADDRESS);
+        Wire.write(0x0d);//0x0d is the status register
+        Wire.write(0xff);//setting a bit to 1 clears its interrupt 11111111
+        Wire.endTransmission();
+    }
+}

@@ -65,3 +65,7 @@ int CL32_power::getPercent(){
 int CL32_power::getLoad(){
     return _CL32load;
 }
+
+void CL32_power::read(){
+    //read/reset the interrupt
+}

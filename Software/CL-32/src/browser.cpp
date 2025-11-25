@@ -11,6 +11,42 @@ void browser_keys(){
         Event eTemp = _keys.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
+                if(eTemp.keyData==KB_PG_DN){
+                    if(iTab%2==0){
+                        _code.iFol+=12;
+                        if(_code.iFol>_code.iFolders-1){
+                            _code.iFol=_code.iFolders-1;
+                        }
+                        Serial.println(_code.iFol);
+                        sprintf(_code.filePath,"%s","");
+                        Serial.println(_code.FolderList[_code.iFol].name);
+                        _code.getPath(&_code.FolderList[_code.iFol]);
+                        _code.listFile();
+                    }
+                    else{
+                        _code.iFil+=12;
+                        if(_code.iFil>_code.iFiles-1){
+                            _code.iFil=_code.iFiles-1;
+                        }
+                    }
+                }
+                else if(eTemp.keyData==KB_PG_UP){
+                    if(iTab%2==0){
+                        _code.iFol-=12;
+                        if(_code.iFol<0){
+                            _code.iFol=0;
+                        }
+                        sprintf(_code.filePath,"%s","");
+                        _code.getPath(&_code.FolderList[_code.iFol]);
+                        _code.listFile();
+                    }
+                    else{
+                        _code.iFil-=12;
+                        if(_code.iFil<0){
+                            _code.iFil=0;
+                        }
+                    }
+                }
                 if(eTemp.keyData==KB_DOWN){
                     if(iTab%2==0){
                         _code.iFol++;

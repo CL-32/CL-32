@@ -10,6 +10,7 @@ public:
     int getVoltage();
     int getPercent();
     int getLoad();
+    void read();
 private:
     int  _CL32voltage;
     int  _CL32percent;
