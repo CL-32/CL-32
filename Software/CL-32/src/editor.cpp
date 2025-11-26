@@ -50,7 +50,13 @@ void editor_keys(){
                         _code.moveCursor(1,'N');
                     }
                     if(eTemp.keyData==KB_LEFT){
-                        _code.moveCursor(1,'W');
+                        if(_code.iCol==0){//tack this line onto the one above
+                            _code.moveCursor(1,'N');
+                            _code.moveCursor(999,'E');
+                        }
+                        else{
+                            _code.moveCursor(1,'W');
+                        }
                     }
                     else if(eTemp.keyData==KB_RGHT){
                         _code.moveCursor(1,'E');
@@ -68,20 +74,30 @@ void editor_keys(){
                         _code.moveCursor(999,'E');
                     }
                     else if(eTemp.keyData==KB_RET){
-                        _code.putChar(10,_code.codeLines[_code.iRow][_code.iCol].pos);
+                        _code.putChar(10,_code.codeLines[_code.iRow - _code.iWindowY][_code.iCol - _code.iWindowX].pos);
                         if(_code.bCRLF){
-                            _code.putChar(13,_code.codeLines[_code.iRow][_code.iCol].pos);
+                            _code.putChar(13,_code.codeLines[_code.iRow - _code.iWindowY][_code.iCol - _code.iWindowX].pos);
                         }
+                        //move down a line
+                        _code.moveCursor(1,'S');
+                        //then we need to be at the start of that line, in case we just broke a full line
+                        _code.moveCursor(999,'W');
                     }
                     else if(eTemp.keyData==KB_BSP){
-                        //_code.moveCursor(1,'W');
-                        _code.putChar(KB_BSP,_code.codeLines[_code.iRow][_code.iCol].pos-1);
+                        if(_code.iCol==0){//tack this line onto the one above
+                            _code.moveCursor(1,'N');
+                            _code.moveCursor(999,'E');
+                        }
+                        else{
+                            _code.moveCursor(1,'W');
+                        }
+                        _code.putChar(KB_BSP,_code.codeLines[_code.iRow - _code.iWindowY][_code.iCol - _code.iWindowX].pos);
                     }
                 }
             }
             else{
                 if(isMenu==OFF){
-                    _code.putChar(eTemp.keyData,_code.codeLines[_code.iRow][_code.iCol].pos);
+                    _code.putChar(eTemp.keyData,_code.codeLines[_code.iRow - _code.iWindowY][_code.iCol - _code.iWindowX].pos);
                     _code.getWindow();
                     _code.moveCursor(1,'E');
                 }

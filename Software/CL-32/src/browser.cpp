@@ -22,6 +22,7 @@ void browser_keys(){
                         Serial.println(_code.FolderList[_code.iFol].name);
                         _code.getPath(&_code.FolderList[_code.iFol]);
                         _code.listFile();
+                        _code.iFil = 0;
                     }
                     else{
                         _code.iFil+=12;
@@ -39,6 +40,7 @@ void browser_keys(){
                         sprintf(_code.filePath,"%s","");
                         _code.getPath(&_code.FolderList[_code.iFol]);
                         _code.listFile();
+                        _code.iFil = 0;
                     }
                     else{
                         _code.iFil-=12;
@@ -58,6 +60,7 @@ void browser_keys(){
                         Serial.println(_code.FolderList[_code.iFol].name);
                         _code.getPath(&_code.FolderList[_code.iFol]);
                         _code.listFile();
+                        _code.iFil = 0;
                     }
                     else{
                         _code.iFil++;
@@ -75,6 +78,7 @@ void browser_keys(){
                         sprintf(_code.filePath,"%s","");
                         _code.getPath(&_code.FolderList[_code.iFol]);
                         _code.listFile();
+                        _code.iFil = 0;
                     }
                     else{
                         _code.iFil--;
@@ -94,6 +98,7 @@ void browser_keys(){
                         iTab = 1;
                     }
                     else{
+                        _code.iCol = _code.iRow = 0;
                         sprintf(_code.fileName,"%s",_code.sFileList[_code.iFil]);
                         _code.readFile();
                         goBack=true;
