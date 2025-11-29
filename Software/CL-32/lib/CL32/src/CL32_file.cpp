@@ -131,7 +131,8 @@ void CL32_file::readFile(){
           iWindowX=iWindowY=0;//reset
           getLines();
         }
-        curFile.close();          
+        curFile.close();   
+        bModified = false;       
       }
     }
     else{
@@ -208,6 +209,7 @@ void CL32_file::putChar(char charIn,unsigned int charPos){
     _fileBuffer[charPos]=charIn;
   }
   getLines();
+  bModified = true;
 }
 
 void CL32_file::moveCursor(byte distance,char direction){
@@ -223,10 +225,22 @@ void CL32_file::moveCursor(byte distance,char direction){
   }
   //we need to sanity check those values, lets start with the column
   if (iCol < 0){//we cant be any further left than the start of the line
-    iCol = 0;
+    if(distance==1&&direction=='W'){//if you press left on most editors, it moves the cursor to the end of the line above
+      iRow--;
+      iCol = _lineNumbers[iRow].len;
+    }
+    else{
+      iCol = 0;
+    }
   }
   if (iCol > _lineNumbers[iRow].len){//we cant be any further right than the end of the line
-    iCol = _lineNumbers[iRow].len;
+    if(distance==1&&direction=='E'){//if you press left on most editors, it moves the cursor to the end of the line above
+      iRow++;
+      iCol = 0;
+    }
+    else{
+      iCol = _lineNumbers[iRow].len;
+    }
   }
   //and now to check the row
   if (iRow < 0){//we cant be any further up than the start of the file
@@ -263,4 +277,27 @@ char* CL32_file::getFilename(){
 
 char* CL32_file::windowChar(u_int16_t x, u_int16_t y){
   return &codeLines[y][x].val;
+}
+
+void CL32_file::saveFile(){
+  //local file read variable
+  File curFile;
+  char fullFileName[200];
+  sprintf(fullFileName,"%s/%s",filePath,fileName);
+  //use the non standard spi pin connection to start an sd card
+  if(SD.begin(CL32_sd_cs,hspi)){
+    curFile = SD.open(fullFileName,FILE_WRITE);
+    if(curFile){
+      for(unsigned int i=0;i<_fileSize;i++){
+           curFile.write(_fileBuffer[i]);         // Read the file into the buffer.
+      }
+      curFile.close();  
+      bModified = false;        
+    }
+  }
+  else{
+    _screen.showMsg("SD Card Fail");
+  }
+  SD.end();
+
 }

@@ -42,6 +42,7 @@ public:
     void moveCursor(byte distance,char direction);
     char* getFilename();
     char* windowChar(u_int16_t x, u_int16_t y);
+    void saveFile();
     int iRow, iCol;
     unsigned int iWindowX, iWindowY;
     int iFolders, iFiles, iFol, iFil, iPage;
@@ -52,7 +53,7 @@ public:
     //this array stores the 'window' of code, it will be populated based on the position of the data within the file
     CharData codeLines[windowH][windowW] ;
     //does the file have windows style carrage return and line feed?
-    bool bCRLF;
+    bool bCRLF, bModified;
 private:
     //the file could be 50 lines of 100 char of text, or could be 1000 lines with 5 chars of text, so it might be handy to have a
     //list of where in the file each line of the text is. therefore we need an array to store that too

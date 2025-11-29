@@ -36,6 +36,18 @@ void menu_keys(){
                     currentApp = newApp;
                     isMenu = OFF;//take it out of menu mode
                 }
+                else if(eTemp.keyData==KB_TAB){
+                    _screen.yesNoDialog("Save Changes",true);
+                    delay(500);
+                    _screen.yesNoDialog("Save Changes",false);
+                    delay(500);
+                    _screen.inputDialog("Enter New Name","");
+                    delay(500);
+                    _screen.inputDialog("Enter New Name","tes");
+                    delay(500);
+                    _screen.inputDialog("Enter New Name","test.txt");
+                    delay(500);
+                }
             }
             //dont really need an else here, if its not the 3 char's we aee interested in, then we dont neeed that key
         }

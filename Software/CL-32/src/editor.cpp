@@ -50,13 +50,7 @@ void editor_keys(){
                         _code.moveCursor(1,'N');
                     }
                     if(eTemp.keyData==KB_LEFT){
-                        if(_code.iCol==0){//tack this line onto the one above
-                            _code.moveCursor(1,'N');
-                            _code.moveCursor(999,'E');
-                        }
-                        else{
-                            _code.moveCursor(1,'W');
-                        }
+                        _code.moveCursor(1,'W');
                     }
                     else if(eTemp.keyData==KB_RGHT){
                         _code.moveCursor(1,'E');
@@ -109,6 +103,9 @@ void editor_keys(){
         if(current==OPEN){
             _keys.add_callback(browser_keys);
             draw_browser(false);
+        }
+        else if(current==SAVE){
+            
         }
     }
     else if(isMenu==ON){

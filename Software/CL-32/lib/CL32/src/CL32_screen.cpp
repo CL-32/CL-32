@@ -160,6 +160,55 @@ void CL32_screen::showMsg(char *textIn){
     display.hibernate();
 }
 
+
+void CL32_screen::yesNoDialog(String prompt, bool yesNo){
+    int16_t x, y, iPad = 10;
+    uint16_t w, h;
+    display.setFont(&FreeMonoBold12pt7b);
+    display.getTextBounds(prompt,0,50,&x,&y,&w,&h);
+    h *= 4;
+    x = (display.width() - w)/2;
+    y = (display.height() - h)/2;
+    display.setPartialWindow(0,0,display.width(),display.height());
+    display.fillRect(x-iPad,y-iPad,w+(iPad*2),h+(iPad*2),GxEPD_BLACK);
+    display.fillRect(x-(iPad/2),y-(iPad/2),w+iPad,h+iPad,GxEPD_WHITE);
+    display.setCursor(x,y+(iPad*2));
+    display.print(prompt);
+    //lets show the yes/no option
+    display.getTextBounds(yesNo?"Yes":"No",0,50,&x,&y,&w,&h);
+    display.setCursor((display.width()-w)/2,display.height()/2+(iPad*2));
+    display.print(yesNo?"Yes":"No");
+    display.setFont(&FreeMono12pt7b);
+    display.getTextBounds(!yesNo?"Yes":"No",0,50,&x,&y,&w,&h);
+    display.setCursor((display.width()/2)+(yesNo?40:-40-w),display.height()/2+(iPad*2));
+    display.print(!yesNo?"Yes":"No");
+    display.display(true);
+    display.hibernate();
+}
+void CL32_screen::inputDialog(String prompt, String userInput){
+    int16_t x, y, iPad = 10;
+    uint16_t w, h;
+    display.setFont(&FreeMonoBold12pt7b);
+    display.getTextBounds(prompt,0,50,&x,&y,&w,&h);
+    h *= 4;
+    x = (display.width() - w)/2;
+    y = (display.height() - h)/2;
+    display.setPartialWindow(0,0,display.width(),display.height());
+    display.fillRect(x-iPad,y-iPad,w+(iPad*2),h+(iPad*2),GxEPD_BLACK);
+    display.fillRect(x-(iPad/2),y-(iPad/2),w+iPad,h+iPad,GxEPD_WHITE);
+    display.setCursor(x,y+(iPad*2));
+    display.print(prompt);
+    //lets show the yes/no option
+    display.setFont(&FreeMono12pt7b);
+    display.getTextBounds(userInput,0,50,&x,&y,&w,&h);
+    x = (display.width() - w)/2;
+    y = ((display.height() - h)/2)+(iPad*2);
+    display.setCursor(x,y);
+    display.print(userInput);
+    display.display(true);
+    display.hibernate();
+}
+
 void CL32_screen::show(bool goFast){
     display.display(goFast); // full update
     display.hibernate();

@@ -21,7 +21,6 @@ enum AppList {EDIT,CALC,BEEP,SET};
 extern AppList currentApp, newApp;         
 extern const String appNames[];  
 
-
 extern int iFontH;
 extern int iFontW;
 

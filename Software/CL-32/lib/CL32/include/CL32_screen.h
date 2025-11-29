@@ -23,6 +23,8 @@ public:
     void addBox(int startX, int startY, int sizeX, int sizeY, bool isBlack, bool isFilled);
     void addHead(String title);
     void showMsg(char *textIn);
+    void yesNoDialog(String prompt, bool yesNo);
+    void inputDialog(String prompt, String userInput);
     void show(bool goFast);
     int width();
     int height();
