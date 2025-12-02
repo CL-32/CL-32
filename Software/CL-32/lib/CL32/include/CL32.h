@@ -17,7 +17,7 @@ extern CL32_power _batt;
 enum MenuState {ON,OFF,SUB};      
 extern MenuState isMenu;          
 
-enum AppList {EDIT,CALC,BEEP,SET};      
+enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};      
 extern AppList currentApp, newApp;         
 extern const String appNames[];  
 
@@ -36,6 +36,10 @@ void draw_editor(bool goFast);
 void browser_keys();
 //function for drawing the file browser screen
 void draw_browser(bool goFast);
+//callback function for deciding what to do with keyboard events
+void calc_keys();
+//function for drawing the file browser screen
+void draw_calc(bool goFast);
 
 
 #endif

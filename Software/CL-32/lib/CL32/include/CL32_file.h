@@ -43,6 +43,7 @@ public:
     char* getFilename();
     char* windowChar(u_int16_t x, u_int16_t y);
     void saveFile();
+    bool fileExsist();
     int iRow, iCol;
     unsigned int iWindowX, iWindowY;
     int iFolders, iFiles, iFol, iFil, iPage;

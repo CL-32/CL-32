@@ -85,8 +85,8 @@ CL32_keyboard::CL32_keyboard() {
     _matrix[55] = {KB_FILE, KB_FILE,KB_FILE,false};
     _matrix[56] = {KB_MENU, KB_MENU,KB_MENU,false};
     _matrix[57] = {KB_BSP,  KB_BSP, KB_BSP, false};
-    _matrix[58] = {'p',     'P',    'p',    true};
-    _matrix[59] = {'o',     'O',    'o',    true};
+    _matrix[58] = {'p',     'P',    ')',    true};
+    _matrix[59] = {'o',     'O',    '()',    true};
     _matrix[60] = { 0 ,	    0 ,	    0 ,     0 };
     _matrix[61] = {'9',     '9',    '9',    true};
     _matrix[62] = {'8',     '8',    '8',    true};

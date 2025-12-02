@@ -1,12 +1,15 @@
 #include <Arduino.h> 
 #include "CL32.h"
-
+//enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};    
 void change_app(bool increment){
     if(increment){
         switch (newApp) {
             case EDIT: newApp =  CALC; break;
-            case CALC: newApp = BEEP; break;
-            case BEEP: newApp =  SET; break;
+            case CALC: newApp = TODO; break;
+            case TODO: newApp =  CAL; break;
+            case CAL: newApp =  AUTH; break;
+            case AUTH: newApp =  READ; break;
+            case READ: newApp =  SET; break;
             case SET: newApp = EDIT;
         }
     }
@@ -14,8 +17,11 @@ void change_app(bool increment){
         switch (newApp) {
             case EDIT: newApp =  SET; break;
             case CALC: newApp = EDIT; break;
-            case BEEP: newApp =  CALC; break;
-            case SET: newApp = BEEP;
+            case TODO: newApp =  CALC; break;
+            case CAL: newApp =  TODO; break;
+            case AUTH: newApp =  CAL; break;
+            case READ: newApp =  AUTH; break;
+            case SET: newApp = READ;
         }
     }
 }
@@ -37,16 +43,6 @@ void menu_keys(){
                     isMenu = OFF;//take it out of menu mode
                 }
                 else if(eTemp.keyData==KB_TAB){
-                    _screen.yesNoDialog("Save Changes",true);
-                    delay(500);
-                    _screen.yesNoDialog("Save Changes",false);
-                    delay(500);
-                    _screen.inputDialog("Enter New Name","");
-                    delay(500);
-                    _screen.inputDialog("Enter New Name","tes");
-                    delay(500);
-                    _screen.inputDialog("Enter New Name","test.txt");
-                    delay(500);
                 }
             }
             //dont really need an else here, if its not the 3 char's we aee interested in, then we dont neeed that key
@@ -67,7 +63,7 @@ void menu_keys(){
 void draw_menu(bool goFast){
     _screen.clearScreen(false,goFast);
     _screen.addHead("Menu");
-    for(byte i = 0;i<4;i++){
+    for(byte i = 0;i<7;i++){
         if(i==newApp){
             _screen.setFont(12,true,false);
         }

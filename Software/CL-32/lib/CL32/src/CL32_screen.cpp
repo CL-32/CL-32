@@ -54,6 +54,17 @@ void CL32_screen::setFont(byte fontSize, bool isBold, bool isItalic){
             display.setFont(&FreeMono12pt7b);
         }
     }
+    else if(fontSize==18){
+        if (isBold){
+            display.setFont(&FreeMonoBold18pt7b);
+        }
+        else if (isItalic){
+            display.setFont(&FreeMonoOblique18pt7b);
+        }
+        else{
+            display.setFont(&FreeMono18pt7b);
+        }
+    }
 }
 
 void CL32_screen::addText(char *textIn, int posX, int posY, bool isBlack){
@@ -161,7 +172,7 @@ void CL32_screen::showMsg(char *textIn){
 }
 
 
-void CL32_screen::yesNoDialog(String prompt, bool yesNo){
+void CL32_screen::yesNoDialog(char *prompt, bool yesNo){
     int16_t x, y, iPad = 10;
     uint16_t w, h;
     display.setFont(&FreeMonoBold12pt7b);
@@ -185,7 +196,7 @@ void CL32_screen::yesNoDialog(String prompt, bool yesNo){
     display.display(true);
     display.hibernate();
 }
-void CL32_screen::inputDialog(String prompt, String userInput){
+void CL32_screen::inputDialog(char *prompt, char *userInput){
     int16_t x, y, iPad = 10;
     uint16_t w, h;
     display.setFont(&FreeMonoBold12pt7b);

@@ -4,6 +4,9 @@
 enum subMenu {RUN,OPEN,SAVE,NEW};
 subMenu current;
 String menuNames[] = { "Run File", "Open File", "Save File", "New File" }; 
+bool askSave = false, saveYesNo = false;
+bool askName = false, askDone = false;
+char nameTemp[50];
 
 void move_menu(bool increment){
     if(increment){
@@ -39,7 +42,37 @@ void editor_keys(){
                         move_menu(false);
                     }
                     else if(eTemp.keyData==KB_RET){
+                        if(askSave){
+                            if(saveYesNo){
+                                _code.saveFile();
+                                askSave = false;
+                                saveYesNo = false;
+                            }
+                            else{//if the user said no, we need to pretend there are no changes so the browser opens fine
+                                _code.bModified = false;
+                                askSave = false;
+                                saveYesNo = false;
+                            }
+                        }
+                        if(askName){
+                            sprintf(_code.fileName,"%s",nameTemp);
+                            askDone = true;
+                            askName = false;
+                        }
                         subRun = true;
+                    }
+                    else if(eTemp.keyData==KB_LEFT&&askSave){
+                        saveYesNo = !saveYesNo;
+                    }
+                    else if(eTemp.keyData==KB_RGHT&&askSave){
+                        saveYesNo = !saveYesNo;
+                    }
+                    else if(eTemp.keyData==KB_ESC){
+                        //cancel all the sub menu stuff
+                        subRun = false;
+                        isMenu = OFF;
+                        askSave = false;
+                        askName = false;
                     }
                 }
                 else{//not the submenu, lets edit
@@ -95,17 +128,73 @@ void editor_keys(){
                     _code.getWindow();
                     _code.moveCursor(1,'E');
                 }
+                else{
+                    sprintf(nameTemp,"%s%c",nameTemp,eTemp.keyData);
+                }
             }
         }
     }
     if(subRun){
-        isMenu = OFF;//take it out of menu mode
-        if(current==OPEN){
-            _keys.add_callback(browser_keys);
-            draw_browser(false);
+        if(current==RUN){
+            isMenu = OFF;//take it out of menu mode
+         
+            //some code here to run the codez 
+
+            _screen.showMsg("Coming Soon....");
+            delay(500);
+            draw_editor(true);
+        }
+        else if(current==OPEN){
+            if(_code.bModified){//ask to save
+                if(!askSave){
+                    askSave = true;
+                    saveYesNo = false;
+                }
+                draw_editor(true);
+            }
+            else{
+                isMenu = OFF;//take it out of menu mode
+                _keys.add_callback(browser_keys);
+                draw_browser(false);
+            }
         }
         else if(current==SAVE){
-            
+            isMenu = OFF;//take it out of menu mode
+            _code.saveFile();
+            _screen.showMsg("Saved");
+            delay(500);
+            draw_editor(true);
+        }
+        else if(current==NEW){
+            if(_code.bModified){//ask to save
+                if(!askSave){
+                    askSave = true;
+                    saveYesNo = false;
+                    askDone = false;
+                }
+                draw_editor(true);
+            }
+            else{ 
+                if(!askDone){ 
+                    if(!askName){
+                        askName = true;
+                        sprintf(nameTemp,"");
+                    }
+                    draw_editor(true);
+                }
+                else{
+                    isMenu = OFF;
+                    if(_code.fileExsist()){
+                        _screen.showMsg("File Already Exsists");
+                        sprintf(_code.fileName,"");
+                        delay(500);
+                    }
+                    else{
+                        _code.readFile();
+                    }
+                    draw_editor(true);
+                }
+            }
         }
     }
     else if(isMenu==ON){
@@ -119,46 +208,54 @@ void editor_keys(){
 
 //function for drawing the editor screen
 void draw_editor(bool goFast){
-    if(isMenu==SUB){
-        _screen.addBox(1,16,140,90,false,true);
-        _screen.addBox(1,16,140,90,true,false);
-        for(byte i = 0;i<4;i++){
-            if(i==current){
-                _screen.setFont(12,true,false);
-            }
-            else{
-                _screen.setFont(12,false,false);
-            }
-            _screen.addText(menuNames[i],8,36+(i*20),true);
-        }
+    if(askSave){
+        _screen.yesNoDialog("Save Changes??",saveYesNo);
+    }
+    else if(askName){
+        _screen.inputDialog("Enter a Filename",nameTemp);
     }
     else{
-        _screen.clearScreen(false,goFast);
-        _screen.setFont(12,true,false);
-        if(strlen(_code.getFilename())==0){
-            _screen.addHead("Editor");
-            _screen.addText("Please Open A File To Edit",40,100,true);
+        if(isMenu==SUB){
+            _screen.addBox(1,16,140,90,false,true);
+            _screen.addBox(1,16,140,90,true,false);
+            for(byte i = 0;i<4;i++){
+                if(i==current){
+                    _screen.setFont(12,true,false);
+                }
+                else{
+                    _screen.setFont(12,false,false);
+                }
+                _screen.addText(menuNames[i],8,36+(i*20),true);
+            }
         }
         else{
-            _screen.addHead(_code.getFilename());
-            //reload the current view from the big file
-            _code.getWindow();
-            //draw the edit screen
-            for(int y = 0;y<windowH;y++){
-                for(int x = 0;x<windowW;x++){
-                    _screen.setFont(9,false,false);
-                    if(x==_code.iCol-_code.iWindowX && y==_code.iRow-_code.iWindowY){
-                        //we are on the same position as the cursor, lets do things different
-                        _screen.addBox(x*iFontW,(iFontH) + (y * iFontH) + 5,iFontW,iFontH,true,true);
-                        _screen.addText(_code.windowChar(x,y),x*iFontW,(iFontH*2) + (y * iFontH) + 4,false);
-                    }
-                    else{
-                        //normal text
-                        _screen.addText(_code.windowChar(x,y),x*iFontW,(iFontH*2) + (y * iFontH) + 4,true);
+            _screen.clearScreen(false,goFast);
+            _screen.setFont(12,true,false);
+            if(strlen(_code.getFilename())==0){
+                _screen.addHead("Editor");
+                _screen.addText("Please Open A File To Edit",40,100,true);
+            }
+            else{
+                _screen.addHead(_code.getFilename());
+                //reload the current view from the big file
+                _code.getWindow();
+                //draw the edit screen
+                for(int y = 0;y<windowH;y++){
+                    for(int x = 0;x<windowW;x++){
+                        _screen.setFont(9,false,false);
+                        if(x==_code.iCol-_code.iWindowX && y==_code.iRow-_code.iWindowY){
+                            //we are on the same position as the cursor, lets do things different
+                            _screen.addBox(x*iFontW,(iFontH) + (y * iFontH) + 5,iFontW,iFontH,true,true);
+                            _screen.addText(_code.windowChar(x,y),x*iFontW,(iFontH*2) + (y * iFontH) + 4,false);
+                        }
+                        else{
+                            //normal text
+                            _screen.addText(_code.windowChar(x,y),x*iFontW,(iFontH*2) + (y * iFontH) + 4,true);
+                        }
                     }
                 }
             }
         }
+        _screen.show(goFast);
     }
-    _screen.show(goFast);
 }

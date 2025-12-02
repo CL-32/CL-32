@@ -134,6 +134,10 @@ void CL32_file::readFile(){
         curFile.close();   
         bModified = false;       
       }
+      else{//if this failed, then the file probably doesnt exsist. we need to reset everything
+        _fileSize = 0;
+        getLines();
+      }
     }
     else{
       _fileSize = 0;//so we can check later
@@ -300,4 +304,25 @@ void CL32_file::saveFile(){
   }
   SD.end();
 
+}
+
+bool CL32_file::fileExsist(){
+  //local file read variable
+  File curFile;
+  char fullFileName[200];
+  sprintf(fullFileName,"%s/%s",filePath,fileName);
+  //use the non standard spi pin connection to start an sd card
+  if(SD.begin(CL32_sd_cs,hspi)){
+    curFile = SD.open(fullFileName,FILE_READ);
+    if(curFile){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  else{
+    return false;
+  }
+  SD.end();
 }

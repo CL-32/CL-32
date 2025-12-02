@@ -10,6 +10,9 @@
 #include <Fonts/FreeMono12pt7b.h>
 #include <Fonts/FreeMonoOblique12pt7b.h>
 #include <Fonts/FreeMonoBold12pt7b.h>
+#include <Fonts/FreeMono18pt7b.h>
+#include <Fonts/FreeMonoOblique18pt7b.h>
+#include <Fonts/FreeMonoBold18pt7b.h>
 
 class CL32_screen{
 public:
@@ -23,8 +26,8 @@ public:
     void addBox(int startX, int startY, int sizeX, int sizeY, bool isBlack, bool isFilled);
     void addHead(String title);
     void showMsg(char *textIn);
-    void yesNoDialog(String prompt, bool yesNo);
-    void inputDialog(String prompt, String userInput);
+    void yesNoDialog(char *prompt, bool yesNo);
+    void inputDialog(char *prompt, char *userInput);
     void show(bool goFast);
     int width();
     int height();
