@@ -15,7 +15,7 @@ void CL32_screen::init(){
     display.setTextWrap(false);
     display.setFullWindow();
     display.fillScreen(GxEPD_WHITE);
-    display.drawBitmap((display.width()/2) -148,(display.height()/2)-64,image_data_cl32_logo,296,128,GxEPD_WHITE,GxEPD_BLACK);
+    display.drawBitmap((display.width()/2) -148,(display.height()/2)-64,image_data_CL32_logo,296,128,GxEPD_BLACK);
     display.display(true); // full update
     display.hibernate();
 }
@@ -101,7 +101,7 @@ void CL32_screen::addHead(String title){
     display.setCursor(0,10);
     display.print(title);
     display.setCursor((display.width()/2)-(12*2.5),10);
-    display.print(_time.timeText);
+    display.print(_time.getTimeText());
     display.setCursor(display.width()-50,10);
     if (_keys._shift==UNPRESSED){
       display.print("abc");
@@ -222,6 +222,59 @@ void CL32_screen::inputDialog(char *prompt, char *userInput){
 
 void CL32_screen::show(bool goFast){
     display.display(goFast); // full update
+    display.hibernate();
+}
+
+void CL32_screen::drawSleep(){
+    display.fillRect(0,0,display.width(),14,GxEPD_WHITE);
+    display.setFont(&FreeMono9pt7b);
+    display.setTextColor(GxEPD_BLACK);
+    display.setCursor((display.width()/2)-(12*11),10);
+    display.print("Shhh, I am Sleeping....");
+    display.drawBitmap((display.width()/2) -148,30,image_data_CL32_logo,296,128,GxEPD_BLACK);
+    display.display(true);
+    display.hibernate();
+
+}
+
+void CL32_screen::refreshStatus(){
+    display.fillRect((display.width()/2)-(12*2.5),0,(display.width()/2)+(12*2.5),14,GxEPD_WHITE);
+    display.setFont(&FreeMono9pt7b);
+    display.setTextColor(GxEPD_BLACK);
+    _time.loadTime();
+    display.setCursor((display.width()/2)-(12*2.5),10);
+    display.print(_time.getTimeText());
+    _batt.loadPower();
+    display.drawLine(display.width()-11,0,display.width()-1,0,GxEPD_BLACK);
+    display.drawLine(display.width()-11,12,display.width()-1,12,GxEPD_BLACK);
+    display.drawLine(display.width()-11,0,display.width()-11,12,GxEPD_BLACK);
+    display.drawLine(display.width()-1,0,display.width()-1,12,GxEPD_BLACK);
+    display.drawLine(display.width()-12,2,display.width()-12,12-2,GxEPD_BLACK);
+    display.drawLine(display.width()-13,2,display.width()-13,12-2,GxEPD_BLACK);
+    //battery bars
+    int iVolt = _batt.getVoltage();
+    if (iVolt > 3300){
+    display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,GxEPD_BLACK); //3.3v
+    }
+    if (iVolt > 3300){
+      display.drawLine(display.width()-4,2,display.width()-4,iFontH-2,GxEPD_BLACK); //3.5v
+    }
+    if (iVolt > 3700){
+      display.drawLine(display.width()-5,2,display.width()-5,iFontH-2,GxEPD_BLACK); //3.7v
+    }
+    if (iVolt > 3800){
+      display.drawLine(display.width()-6,2,display.width()-6,iFontH-2,GxEPD_BLACK); //3.8v
+    }
+    if (iVolt > 3900){
+      display.drawLine(display.width()-7,2,display.width()-7,iFontH-2,GxEPD_BLACK); //3.9v
+    }
+    if (iVolt > 4000){
+      display.drawLine(display.width()-8,2,display.width()-8,iFontH-2,GxEPD_BLACK); //4.0v
+    }
+    if (iVolt > 4100){
+      display.drawLine(display.width()-9,2,display.width()-9,iFontH-2,GxEPD_BLACK); //4.1v+
+    }   
+    display.display(true);
     display.hibernate();
 }
 

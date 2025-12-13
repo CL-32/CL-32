@@ -1,11 +1,9 @@
 #include "CL32.h"
 #include <Arduino.h> 
 
-char calcInput[30] = "";
-
 
 //callback function for deciding what to do with keyboard events
-void calc_keys(){
+void todo_keys(){
     for(byte i = _keys.eventCount();i>0;i--){
         Event eTemp = _keys.getKey();
         if(eTemp.keyDown){
@@ -13,7 +11,7 @@ void calc_keys(){
 
             }
             else{
-                sprintf(calcInput,"%s%c",calcInput,eTemp.keyData);
+
             }
         }
     }
@@ -22,18 +20,17 @@ void calc_keys(){
         draw_menu(fastAppSwitch);
     }
     else{
-        draw_calc(true);
+        draw_todo(true);
     }
 
 
 }
 //function for drawing the file browser screen
-void draw_calc(bool goFast){
+void draw_todo(bool goFast){
     _screen.clearScreen(false,goFast);
-    _screen.addHead("Calculator");
+    _screen.addHead("To-Do List");
 
-    _screen.setFont(18,true,false);
-    _screen.addText(calcInput,10,160,true);
+    //draw some stuff
     
     _screen.show(goFast);
 

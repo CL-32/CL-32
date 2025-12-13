@@ -136,11 +136,14 @@ void CL32_file::readFile(){
       }
       else{//if this failed, then the file probably doesnt exsist. we need to reset everything
         _fileSize = 0;
+        iWindowX=iWindowY=0;//reset
         getLines();
       }
     }
     else{
       _fileSize = 0;//so we can check later
+      iWindowX=iWindowY=0;//reset
+      getLines();
     }
   }
   else{

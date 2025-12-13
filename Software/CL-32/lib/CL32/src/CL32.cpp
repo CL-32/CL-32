@@ -14,3 +14,8 @@ AppList newApp = EDIT;
 
 int iFontH = 12;
 int iFontW = 12;
+
+//some system settings
+byte saverTime = 5;
+bool doSleep = true;
+bool fastAppSwitch = false;

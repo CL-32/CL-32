@@ -51,7 +51,19 @@ void menu_keys(){
     if(isMenu==OFF){        
         if(currentApp==EDIT){
             _keys.add_callback(editor_keys);
-            draw_editor(false);
+            draw_editor(fastAppSwitch);
+        }
+        else if(currentApp==CALC){
+            _keys.add_callback(calc_keys);
+            draw_calc(fastAppSwitch);
+        }
+        else if(currentApp==TODO){
+            _keys.add_callback(todo_keys);
+            draw_todo(fastAppSwitch);
+        }
+        else if(currentApp==SET){
+            _keys.add_callback(set_keys);
+            draw_set(fastAppSwitch);
         }
     }
     else{

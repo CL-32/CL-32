@@ -40,6 +40,25 @@ void draw_browser(bool goFast);
 void calc_keys();
 //function for drawing the file browser screen
 void draw_calc(bool goFast);
+//callback function for deciding what to do with keyboard events
+void todo_keys();
+//function for drawing the file todo screen
+void draw_todo(bool goFast);
 
+
+
+
+//callback function for deciding what to do with keyboard events
+void set_keys();
+//function for drawing the file settings screen
+void draw_set(bool goFast);
+//make the loading of settings global
+void load_set();
+
+
+//some system settings
+extern byte saverTime;
+extern bool doSleep;
+extern bool fastAppSwitch;
 
 #endif

@@ -190,7 +190,9 @@ void editor_keys(){
                         delay(500);
                     }
                     else{
+                        _code.iCol = _code.iRow = 0;
                         _code.readFile();
+                        _code.getWindow();
                     }
                     draw_editor(true);
                 }
@@ -199,7 +201,7 @@ void editor_keys(){
     }
     else if(isMenu==ON){
         _keys.add_callback(menu_keys);
-        draw_menu(false);
+        draw_menu(fastAppSwitch);
     }
     else{
         draw_editor(true);

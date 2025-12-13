@@ -10,9 +10,12 @@ public:
 	void init();
     void loadTime();
     void saveTime(struct tm timeIn);
-    char timeText[6];
     void read();
+    char* getTimeText();
+    char* getUptimeText();
+    struct tm getTimeStruct();
 private:
-    struct tm _CL32time;
+    char _timeText[6], _uptimeText[20];
+    struct tm _CL32time, _onTime;
 };
 #endif

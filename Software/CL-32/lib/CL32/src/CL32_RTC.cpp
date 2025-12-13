@@ -15,6 +15,7 @@ void CL32_rtc::init(){
     Wire.write(0x20);// not used 0 - clock out 0 - backup switchover 10 - charger resistor (not needed) 00 - charger off 00
     Wire.endTransmission();
     loadTime();
+    _onTime = _CL32time;
 }
 
 void CL32_rtc::loadTime(){ 
@@ -43,7 +44,7 @@ void CL32_rtc::loadTime(){
     bData = Wire.read();    
     _CL32time.tm_year = 100 + ((bData >> 4) * 10) + (bData & 0xf);
     //update timetext variable
-    sprintf(timeText, "%02d:%02d", _CL32time.tm_hour, _CL32time.tm_min);
+    sprintf(_timeText, "%02d:%02d", _CL32time.tm_hour, _CL32time.tm_min);
 }
 
 void CL32_rtc::saveTime(struct tm timeIn){
@@ -108,7 +109,28 @@ void CL32_rtc::read(){
         //maybe do some stuff here
         Wire.beginTransmission(RTC_ADDRESS);
         Wire.write(0x0d);//0x0d is the status register
-        Wire.write(0xff);//setting a bit to 1 clears its interrupt 11111111
+        Wire.write(0x00);//setting a bit to 1 clears its interrupt 11111111
         Wire.endTransmission();
     }
+}
+
+
+char* CL32_rtc::getTimeText(){
+    return _timeText;
+}
+
+char* CL32_rtc::getUptimeText(){
+    double uptimeSec;
+    int h,m;
+    uptimeSec = difftime(mktime(&_CL32time),mktime(&_onTime));
+    h = trunc(uptimeSec/3600);//get the whole hours from the seconds
+    m = int(uptimeSec) % 3600;//get the remainder seconds
+    m = trunc(m/60);//chop out the number of minutes from those seconds
+    //we dont care about the seconds left, we are not being that precise
+    sprintf(_uptimeText,"Uptime %d:%02d",h,m);
+    return _uptimeText;
+}
+
+struct tm CL32_rtc::getTimeStruct(){
+    return _CL32time;
 }

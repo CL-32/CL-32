@@ -29,6 +29,8 @@ public:
     void yesNoDialog(char *prompt, bool yesNo);
     void inputDialog(char *prompt, char *userInput);
     void show(bool goFast);
+    void drawSleep();
+    void refreshStatus();
     int width();
     int height();
 private:
