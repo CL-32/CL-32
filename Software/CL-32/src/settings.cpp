@@ -6,7 +6,7 @@ byte iCol;
 struct tm setTime;
 enum subMenu {LOAD,SAVE};
 subMenu currentSet;
-String SetMenuNames[] = { "Reload Settings", "Save Settings" }; 
+String SetMenuNames[] = { "Reload", "Save" }; 
 Preferences CL32_settings;
 
 void load_set(){
@@ -213,8 +213,8 @@ void set_keys(){
 void draw_set(bool goFast){
     
     if(isMenu==SUB){
-        _screen.addBox(1,16,170,50,false,true);
-        _screen.addBox(1,16,170,50,true,false);
+        _screen.addBox(1,16,120,50,false,true);
+        _screen.addBox(1,16,120,50,true,false);
         for(byte i = 0;i<2;i++){
             if(i==currentSet){
                 _screen.setFont(12,true,false);
@@ -238,7 +238,7 @@ void draw_set(bool goFast){
         _screen.addText("Day",305,30,true);
         _screen.addText("Screensaver",10,100,true);
         _screen.addText("Do Sleep",150,100,true);
-        _screen.addText("Fast Refesh",255,100,true);
+        _screen.addText("Fast Refresh",250,100,true);
         char dateTime[50];
         sprintf(dateTime, "%02d : %02d  %04d  %02d  %02d", setTime.tm_hour, setTime.tm_min, setTime.tm_year+1900, setTime.tm_mon, setTime.tm_mday);
         _screen.setFont(12,true,false);
