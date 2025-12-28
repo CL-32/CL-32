@@ -220,6 +220,16 @@ void CL32_screen::inputDialog(char *prompt, char *userInput){
     display.hibernate();
 }
 
+void CL32_screen::drawCkeckbox(int x, int y, bool isTicked){
+    display.fillRoundRect(x,y,18,18,2,GxEPD_BLACK);
+    display.fillRoundRect(x+2,y+2,14,14,2,GxEPD_WHITE);
+    if(isTicked){
+        display.setFont(&FreeMonoBold9pt7b);
+        display.setCursor(x+4,y+13);
+        display.print("X");
+    }
+}
+
 void CL32_screen::show(bool goFast){
     display.display(goFast); // full update
     display.hibernate();
@@ -276,6 +286,18 @@ void CL32_screen::refreshStatus(){
     }   
     display.display(true);
     display.hibernate();
+}
+void CL32_screen::drawOff(){
+    display.setFullWindow();
+    display.fillScreen(GxEPD_WHITE);
+    display.setFont(&FreeMono9pt7b);
+    display.setTextColor(GxEPD_BLACK);
+    display.setCursor((display.width()/2)-(12*6),20);
+    display.print("Powered Off!");
+    display.drawBitmap((display.width()/2) -148,30,image_data_CL32_logo,296,128,GxEPD_BLACK);
+    display.display(false);
+    display.powerOff();
+
 }
 
 int CL32_screen::width(){

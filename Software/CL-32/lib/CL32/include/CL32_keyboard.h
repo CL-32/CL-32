@@ -46,13 +46,15 @@ public:
 	void init();
 	void read();
     void add_callback(CL32_KB_t act);
+	void last_callback();
+	void trigger_callback();
 	Event getKey();
 	byte eventCount();
 	toggleState _shift;
 	toggleState _fn;
 private:
 	Key _matrix[80];
-	CL32_KB_t _action;
+	CL32_KB_t _action, _lastAction;
 	Event _eventLog[20];
 	byte _eventCount;
 };

@@ -28,9 +28,11 @@ public:
     void showMsg(char *textIn);
     void yesNoDialog(char *prompt, bool yesNo);
     void inputDialog(char *prompt, char *userInput);
+    void drawCkeckbox(int x, int y, bool isTicked);
     void show(bool goFast);
     void drawSleep();
     void refreshStatus();
+    void drawOff();
     int width();
     int height();
 private:

@@ -6,8 +6,9 @@ CL32_keyboard _keys;
 CL32_rtc _time;
 CL32_file _code;
 CL32_power _batt;
+CL32_test _test;
 //enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};    
-const String appNames[] = { "Editor", "Calculator", "To-Do List","Calendar","2FA Auth","e-Reader", "Settings" }; 
+const String appNames[] = { "Editor", "Calculator", "To-Do List","Calendar","2FA Auth","E-Reader", "Settings" }; 
 MenuState isMenu = ON;              
 AppList currentApp = EDIT;          
 AppList newApp = EDIT;        
@@ -19,3 +20,6 @@ int iFontW = 12;
 byte saverTime = 5;
 bool doSleep = true;
 bool fastAppSwitch = false;
+bool blockSleep = false;
+
+Preferences CL32_settings;

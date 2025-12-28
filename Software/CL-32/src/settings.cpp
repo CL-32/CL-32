@@ -1,13 +1,11 @@
 #include "CL32.h"
 #include <Arduino.h> 
-#include <Preferences.h>
 
 byte iCol;
 struct tm setTime;
 enum subMenu {LOAD,SAVE};
 subMenu currentSet;
 String SetMenuNames[] = { "Reload", "Save" }; 
-Preferences CL32_settings;
 
 void load_set(){
     CL32_settings.begin("CL32",false);
@@ -149,11 +147,16 @@ void set_keys(){
                             _time.saveTime(setTime);
                             save_set();
                             isMenu=OFF;
+                            _screen.showMsg("Saved");
+                            delay(500);
                         }
                         else if(currentSet==LOAD){
                             _time.loadTime();
                             setTime=_time.getTimeStruct();
                             load_set();
+                            _time.read();
+                            _screen.showMsg("Loaded");
+                            delay(500);
                             isMenu=OFF;
                         }
                     }

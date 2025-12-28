@@ -61,6 +61,18 @@ void menu_keys(){
             _keys.add_callback(todo_keys);
             draw_todo(fastAppSwitch);
         }
+        else if(currentApp==CAL){
+            _keys.add_callback(cal_keys);
+            draw_cal(fastAppSwitch);
+        }
+        else if(currentApp==AUTH){
+            _keys.add_callback(twofa_keys);
+            draw_twofa(fastAppSwitch);
+        }
+        else if(currentApp==READ){
+            _keys.add_callback(reader_keys);
+            draw_reader(fastAppSwitch);
+        }
         else if(currentApp==SET){
             _keys.add_callback(set_keys);
             draw_set(fastAppSwitch);

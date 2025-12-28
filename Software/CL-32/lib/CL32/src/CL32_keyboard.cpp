@@ -86,7 +86,7 @@ CL32_keyboard::CL32_keyboard() {
     _matrix[56] = {KB_MENU, KB_MENU,KB_MENU,false};
     _matrix[57] = {KB_BSP,  KB_BSP, KB_BSP, false};
     _matrix[58] = {'p',     'P',    ')',    true};
-    _matrix[59] = {'o',     'O',    '()',    true};
+    _matrix[59] = {'o',     'O',    '(',    true};
     _matrix[60] = { 0 ,	    0 ,	    0 ,     0 };
     _matrix[61] = {'9',     '9',    '9',    true};
     _matrix[62] = {'8',     '8',    '8',    true};
@@ -233,7 +233,16 @@ void CL32_keyboard::read(){
   }
 }
 void CL32_keyboard::add_callback(CL32_KB_t act){
+    _lastAction = _action;//save the current callback before setting the new one
     _action = act;
+}
+
+void CL32_keyboard::last_callback(){
+    _action = _lastAction;//set the old callback back into play
+}
+
+void CL32_keyboard::trigger_callback(){
+    _action();
 }
 
 Event CL32_keyboard::getKey(){
