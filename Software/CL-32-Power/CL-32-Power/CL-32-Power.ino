@@ -69,15 +69,15 @@ void loop() {
   if(loopCount==500000){
       i2c_regs[0] = trunc(readVoltage()/25);//if the voltage is in mv we can cover a range to 5.86v in 23 mv steps
       loopCount=0;
+      //check for low voltage
+      if(i2c_regs[0]<132){//3300 mv
+        i2c_regs[3] = bitSet(i2c_regs[3],3);
+        pinMode(I2C_INT, OUTPUT);
+        digitalWrite(I2C_INT,LOW);
+      }
   }
   //refresh the LED
   analogWrite(CURRENT_LED, i2c_regs[2]);
-  //check for low voltage
-  if(i2c_regs[0]<132){//3300 mv
-    i2c_regs[3] = bitSet(i2c_regs[3],3);
-    pinMode(I2C_INT, OUTPUT);
-    digitalWrite(I2C_INT,LOW);
-  }
   if(!digitalRead(ON_OFF)){
     buttonCount++;
   }
@@ -153,7 +153,7 @@ uint16_t readVoltage() {
 	ADC0.CTRLA = ADC_ENABLE_bm;
 	//ADC0.CTRLB = ADC_PRESC_DIV2_gc; // DEFAULT setting, no need to change
 	ADC0.CTRLC = VREF_AC0REFSEL_1V024_gc | (TIMEBASE_VALUE << ADC_TIMEBASE_0_bp); // Vref = 1.024V
-	ADC0.CTRLE = 100; // sample duration ((100 * 2) / F_CPU seconds), 1 MHz = 0.2ms
+	ADC0.CTRLE = 150; // sample duration ((100 * 2) / F_CPU seconds), 1 MHz = 0.2ms
 	ADC0.MUXPOS = ADC_MUXPOS_DACREF0_gc ; // using DAC as MUX voltage, ADC_MUXPOS_VDDDIV10_gc doesn't work
 	ADC0.COMMAND = ADC_MODE_SINGLE_12BIT_gc; // single mode with 12 bit
 	ADC0.COMMAND |= ADC_START_IMMEDIATE_gc; // start conversion

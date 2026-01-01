@@ -129,7 +129,7 @@ void CL32_screen::addHead(String title){
     display.drawLine(display.width()-12,2,display.width()-12,12-2,GxEPD_BLACK);
     display.drawLine(display.width()-13,2,display.width()-13,12-2,GxEPD_BLACK);
     //battery bars
-    int iVolt = _batt.getVoltage();
+    int iVolt = _test.getVolts();
     if (iVolt > 3300){
     display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,GxEPD_BLACK); //3.3v
     }
@@ -262,7 +262,7 @@ void CL32_screen::refreshStatus(){
     display.drawLine(display.width()-12,2,display.width()-12,12-2,GxEPD_BLACK);
     display.drawLine(display.width()-13,2,display.width()-13,12-2,GxEPD_BLACK);
     //battery bars
-    int iVolt = _batt.getVoltage();
+    int iVolt = _test.getVolts();
     if (iVolt > 3300){
     display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,GxEPD_BLACK); //3.3v
     }

@@ -78,3 +78,16 @@ void prompt_keys(){
         }
     }
 }
+
+int CL32_test::getVolts(){
+    byte bRead;
+    Wire.beginTransmission(TEST_ADDRESS);
+    Wire.write(0x00);//0x00 is the voltage register
+    Wire.endTransmission();
+
+    Wire.requestFrom(TEST_ADDRESS,1);
+    while(Wire.available() < 1);//sit and wait for response
+    //read the value
+    bRead = Wire.read();
+    return bRead * 25;
+}

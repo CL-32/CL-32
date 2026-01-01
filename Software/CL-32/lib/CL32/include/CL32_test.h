@@ -8,6 +8,7 @@ public:
 	CL32_test();
 	void init();
     void read();
+    int getVolts();
 private:
     int  _voltage;
     bool  _buttonState;

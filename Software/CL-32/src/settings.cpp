@@ -269,7 +269,7 @@ void draw_set(bool goFast){
         _screen.addLine(x+5,y2+5,x+10,y2,true);
         _screen.addLine(x,y2,x+10,y2,true);
 
-        sprintf(dateTime, "%04dmv - %02d%% - %s", _batt.getVoltage(),_batt.getPercent(),_time.getUptimeText());
+        sprintf(dateTime, "%04dmv - %02d%% - %s", _test.getVolts(),_batt.getPercent(),_time.getUptimeText());
         _screen.setFont(9,false,false);
         _screen.addText(dateTime,50,165,true);
         
