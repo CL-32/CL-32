@@ -5,7 +5,6 @@
 #include "CL32_file.h"
 #include "CL32_keyboard.h"
 #include "CL32_power.h"
-#include "CL32_test.h"
 #include "CL32_RTC.h"
 #include "CL32_screen.h"
 #include <Preferences.h>
@@ -15,7 +14,6 @@ extern CL32_keyboard _keys;
 extern CL32_rtc _time;
 extern CL32_file _code;
 extern CL32_power _batt;
-extern CL32_test _test;
 
 enum MenuState {ON,OFF,SUB};      
 extern MenuState isMenu;          
@@ -23,6 +21,9 @@ extern MenuState isMenu;
 enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};      
 extern AppList currentApp, newApp;         
 extern const String appNames[];  
+
+enum ScreenTypes {EPD,RLCD};
+extern ScreenTypes CL32_screen_type; 
 
 extern int iFontH;
 extern int iFontW;

@@ -218,8 +218,8 @@ void draw_editor(bool goFast){
     }
     else{
         if(isMenu==SUB){
-            _screen.addBox(1,16,140,90,false,true);
-            _screen.addBox(1,16,140,90,true,false);
+            _screen.addBox(1,16,150,90,false,true);
+            _screen.addBox(1,16,150,90,true,false);
             for(byte i = 0;i<4;i++){
                 if(i==current){
                     _screen.setFont(12,true,false);

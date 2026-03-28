@@ -33,7 +33,6 @@ void setup() {
     _keys.init();
     _time.init();
     _batt.init();
-    _test.init();
     _keys.add_callback(menu_keys);
     //Serial.begin(115200);
     draw_menu(fastAppSwitch);
@@ -49,7 +48,6 @@ void loop() {
     _keys.read();
     _time.read();
     _batt.read();
-    _test.read();
     refreshCount = 0;
     if(i2c_int) i2c_int = false;
     setInterrupt();

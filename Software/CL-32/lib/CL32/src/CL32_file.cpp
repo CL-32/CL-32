@@ -13,7 +13,12 @@ CL32_file::CL32_file() {
 
 void CL32_file::listFile(){
   iFiles = 0;
-  _screen.showMsg("Getting Files");
+  if(CL32_screen_type==EPD){
+    _screen.showMsg("Getting Files");
+  }
+  else{
+    _screen.drawProgress(0);
+  }
   //use the non standard spi pin connection to start an sd card
   if(SD.begin(CL32_sd_cs,hspi)){
     File curFile = SD.open(filePath);
@@ -22,6 +27,9 @@ void CL32_file::listFile(){
       if (! entry) {
         // no more files
         break;
+      }
+      if(CL32_screen_type==RLCD){
+        _screen.drawProgress(0);
       }
       if (entry.isDirectory() == false) {
         sprintf(sFileList[iFiles], "%s", entry.name());
@@ -57,13 +65,21 @@ void CL32_file::saveFolder(File dir, int depth, FolderData* parent) {
       iFolders++;//increment it here so the funcion call has the corect value for a new entry
       saveFolder(entry, depth + 1,&FolderList[iFolders-1]);//folders count has already been incremented, so we need to knock it back one
     }
+    if(CL32_screen_type==RLCD){
+      _screen.drawProgress(0);
+    }
     entry.close();
   }
 }
 
 void CL32_file::listFolder(){
   iFolders = 0;
-  _screen.showMsg("Getting Folders");
+  if(CL32_screen_type==EPD){
+    _screen.showMsg("Getting Folders");
+  }
+  else{
+    _screen.drawProgress(0);
+  }
   //use the non standard spi pin connection to start an sd card
   if(SD.begin(CL32_sd_cs,hspi)){
     File curFile = SD.open("/");

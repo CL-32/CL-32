@@ -6,12 +6,12 @@ CL32_keyboard _keys;
 CL32_rtc _time;
 CL32_file _code;
 CL32_power _batt;
-CL32_test _test;
 //enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};    
 const String appNames[] = { "Editor", "Calculator", "To-Do List","Calendar","2FA Auth","E-Reader", "Settings" }; 
 MenuState isMenu = ON;              
 AppList currentApp = EDIT;          
-AppList newApp = EDIT;        
+AppList newApp = EDIT;     
+ScreenTypes CL32_screen_type = EPD;    
 
 int iFontH = 12;
 int iFontW = 12;

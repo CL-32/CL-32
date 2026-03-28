@@ -13,6 +13,7 @@
 #include <Fonts/FreeMono18pt7b.h>
 #include <Fonts/FreeMonoOblique18pt7b.h>
 #include <Fonts/FreeMonoBold18pt7b.h>
+#include <U8g2lib.h>
 
 class CL32_screen{
 public:
@@ -29,6 +30,8 @@ public:
     void yesNoDialog(char *prompt, bool yesNo);
     void inputDialog(char *prompt, char *userInput);
     void drawCkeckbox(int x, int y, bool isTicked);
+    void setProgMax(int progMax);
+    void drawProgress(int progress);
     void show(bool goFast);
     void drawSleep();
     void refreshStatus();
@@ -37,5 +40,7 @@ public:
     int height();
 private:
     struct tm _CL32time;
+    int progressMax;
+    int currProgress;
 };
 #endif
