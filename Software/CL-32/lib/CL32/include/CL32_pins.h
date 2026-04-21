@@ -4,7 +4,7 @@
 #include <SPI.h>
 
 extern byte RTC_ADDRESS;
-extern byte BATTERY_ADDRESS;
+extern byte CORE_ADDRESS;
 extern byte CL32_sck;
 extern byte CL32_epd_cs;
 extern byte CL32_sd_cs;

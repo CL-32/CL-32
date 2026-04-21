@@ -45,8 +45,8 @@ void move_menu_ToDo(bool increment){
 
 //callback function for deciding what to do with keyboard events
 void todo_keys(){
-    for(byte i = _keys.eventCount();i>0;i--){
-        Event eTemp = _keys.getKey();
+    for(byte i = _CL32.eventCount();i>0;i--){
+        Event eTemp = _CL32.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
                 if(isMenu==SUB){
@@ -97,7 +97,7 @@ void todo_keys(){
         }
     }
     if(isMenu==ON){
-        _keys.add_callback(menu_keys);
+        _CL32.add_callback(menu_keys);
         draw_menu(fastAppSwitch);
     }
     else{

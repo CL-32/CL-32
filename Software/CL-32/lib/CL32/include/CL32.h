@@ -3,17 +3,15 @@
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include "CL32_file.h"
-#include "CL32_keyboard.h"
-#include "CL32_power.h"
+#include "CL32_core.h"
 #include "CL32_RTC.h"
 #include "CL32_screen.h"
 #include <Preferences.h>
 
 extern CL32_screen _screen;
-extern CL32_keyboard _keys;
 extern CL32_rtc _time;
 extern CL32_file _code;
-extern CL32_power _batt;
+extern CL32_core _CL32;
 
 enum MenuState {ON,OFF,SUB};      
 extern MenuState isMenu;          
@@ -78,6 +76,7 @@ void prompt_keys();
 extern byte saverTime;
 extern bool doSleep;
 extern bool fastAppSwitch;
+extern bool darkMode;
 extern bool blockSleep;
 
 extern Preferences CL32_settings;

@@ -18,6 +18,9 @@ void load_set(){
     if(CL32_settings.isKey("FastAppSwitch")){
         fastAppSwitch = CL32_settings.getBool("FastAppSwitch");
     }
+    if(CL32_settings.isKey("DarkMode")){
+        darkMode = CL32_settings.getBool("DarkMode");
+    }
     CL32_settings.end();
 }
 
@@ -26,6 +29,7 @@ void save_set(){
     CL32_settings.putInt("SaverTime",saverTime);
     CL32_settings.putBool("DoSleep",doSleep);
     CL32_settings.putBool("FastAppSwitch",fastAppSwitch);
+    CL32_settings.putBool("DarkMode",darkMode);
     CL32_settings.end();
 }
 
@@ -126,13 +130,16 @@ void change_value(byte stepSize,bool adding){
     else if(iCol==7){
         fastAppSwitch = !fastAppSwitch;
     }
+    else if(iCol==8){
+        darkMode = !darkMode;
+    }
 }
 
 //callback function for deciding what to do with keyboard events
 void set_keys(){
     
-    for(byte i = _keys.eventCount();i>0;i--){
-        Event eTemp = _keys.getKey();
+    for(byte i = _CL32.eventCount();i>0;i--){
+        Event eTemp = _CL32.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
                 if(isMenu==SUB){
@@ -167,14 +174,14 @@ void set_keys(){
                 else{
                     if(eTemp.keyData==KB_LEFT){
                         if(iCol==0){
-                            iCol=7;
+                            iCol=8;
                         }
                         else{
                             iCol--;
                         }
                     }
                     else if(eTemp.keyData==KB_RGHT){
-                        if(iCol==7){
+                        if(iCol==8){
                             iCol=0;
                         }
                         else{
@@ -203,7 +210,7 @@ void set_keys(){
         }
     }
     if(isMenu==ON){
-        _keys.add_callback(menu_keys);
+        _CL32.add_callback(menu_keys);
         draw_menu(fastAppSwitch);
     }
     else{
@@ -240,16 +247,18 @@ void draw_set(bool goFast){
         _screen.addText("Month",240,30,true);
         _screen.addText("Day",305,30,true);
         _screen.addText("Screensaver",10,100,true);
-        _screen.addText("Do Sleep",150,100,true);
-        _screen.addText("Fast Refresh",250,100,true);
+        _screen.addText("Sleep",130,100,true);
+        _screen.addText("Fast EPD",195,100,true);
+        _screen.addText("Dark Mode",280,100,true);
         char dateTime[50];
-        sprintf(dateTime, "%02d : %02d  %04d  %02d  %02d", setTime.tm_hour, setTime.tm_min, setTime.tm_year+1900, setTime.tm_mon, setTime.tm_mday);
+        sprintf(dateTime, "%02d : %02d  %04d  %02d  %02d", setTime.tm_hour, setTime.tm_min, setTime.tm_year, setTime.tm_mon, setTime.tm_mday);
         _screen.setFont(12,true,false);
         _screen.addText(dateTime,40,60,true);
         sprintf(dateTime,"%d min",saverTime);
         _screen.addText(dateTime,35,130,true);
-        _screen.addText(doSleep?"Yes":"No",170,130,true);
-        _screen.addText(fastAppSwitch?"Yes":"No",300,130,true);
+        _screen.addText(doSleep?"Yes":"No",140,130,true);
+        _screen.addText(fastAppSwitch?"Yes":"No",220,130,true);
+        _screen.addText(darkMode?"Yes":"No",290,130,true);
         int x, y1,y2;
         switch (iCol){
             case 0: x=50;y1=40;y2=70; break;
@@ -258,8 +267,9 @@ void draw_set(bool goFast){
             case 3: x=260;y1=40;y2=70; break;
             case 4: x=315;y1=40;y2=70; break;
             case 5: x=50;y1=110;y2=140; break;
-            case 6: x=180;y1=110;y2=140; break;
-            case 7: x=310;y1=110;y2=140; break;
+            case 6: x=160;y1=110;y2=140; break;
+            case 7: x=240;y1=110;y2=140; break;
+            case 8: x=310;y1=110;y2=140; break;
         }
         _screen.addLine(x,y1,x+5,y1-5,true);
         _screen.addLine(x+5,y1-5,x+10,y1,true);
@@ -269,7 +279,7 @@ void draw_set(bool goFast){
         _screen.addLine(x+5,y2+5,x+10,y2,true);
         _screen.addLine(x,y2,x+10,y2,true);
 
-        sprintf(dateTime, "%04dmv - %02d%% - %s", _batt.getVoltage(),_batt.getPercent(),_time.getUptimeText());
+        sprintf(dateTime, "%04dmv - %02d%% - %s", _CL32.getVoltage(),_CL32.getPercent(),_time.getUptimeText());
         _screen.setFont(9,false,false);
         _screen.addText(dateTime,50,165,true);
         

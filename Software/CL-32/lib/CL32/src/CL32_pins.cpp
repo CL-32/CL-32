@@ -3,7 +3,7 @@
 #include <SPI.h>
 
 byte RTC_ADDRESS = 0x51;
-byte BATTERY_ADDRESS = 0x36;
+byte CORE_ADDRESS = 0x08;
 byte CL32_sck = 9;
 byte CL32_epd_cs = 6;
 byte CL32_sd_cs = 7;

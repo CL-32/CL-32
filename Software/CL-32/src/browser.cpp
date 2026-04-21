@@ -7,8 +7,8 @@ byte iTab;
 //callback function for deciding what to do with keyboard events
 void browser_keys(){
     bool goBack = false;
-    for(byte i = _keys.eventCount();i>0;i--){
-        Event eTemp = _keys.getKey();
+    for(byte i = _CL32.eventCount();i>0;i--){
+        Event eTemp = _CL32.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
                 if(eTemp.keyData==KB_PG_DN){
@@ -112,7 +112,7 @@ void browser_keys(){
     }
     if(goBack){
         if(currentApp==EDIT){
-            _keys.add_callback(editor_keys);
+            _CL32.add_callback(editor_keys);
             draw_editor(false);
         }
     }

@@ -30,10 +30,9 @@ void setInterrupt(){
 
 void setup() {
     _screen.init();
-    _keys.init();
+    _CL32.init();
     _time.init();
-    _batt.init();
-    _keys.add_callback(menu_keys);
+    _CL32.add_callback(menu_keys);
     //Serial.begin(115200);
     draw_menu(fastAppSwitch);
     refreshCount = 0;
@@ -45,9 +44,8 @@ void setup() {
 void loop() {
   if(i2c_int || esp_sleep_get_wakeup_cause()==ESP_SLEEP_WAKEUP_EXT0){
     //the interrupt is shared, so we need to see who is shouting
-    _keys.read();
+    _CL32.read();
     _time.read();
-    _batt.read();
     refreshCount = 0;
     if(i2c_int) i2c_int = false;
     setInterrupt();

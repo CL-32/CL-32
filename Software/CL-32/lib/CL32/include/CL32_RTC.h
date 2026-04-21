@@ -17,5 +17,7 @@ public:
 private:
     char _timeText[6], _uptimeText[20];
     struct tm _CL32time, _onTime;
+    byte bcdToDec(byte val);
+    byte decToBcd(byte val);
 };
 #endif

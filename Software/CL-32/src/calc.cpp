@@ -65,8 +65,8 @@ void equals(){
 
 //callback function for deciding what to do with keyboard events
 void calc_keys(){
-    for(byte i = _keys.eventCount();i>0;i--){
-        Event eTemp = _keys.getKey();
+    for(byte i = _CL32.eventCount();i>0;i--){
+        Event eTemp = _CL32.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
                 if(eTemp.keyData==KB_RET){
@@ -102,7 +102,7 @@ void calc_keys(){
         }
     }
     if(isMenu==ON){
-        _keys.add_callback(menu_keys);
+        _CL32.add_callback(menu_keys);
         draw_menu(fastAppSwitch);
     }
     else{

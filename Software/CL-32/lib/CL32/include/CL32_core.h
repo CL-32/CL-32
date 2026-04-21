@@ -1,9 +1,7 @@
-#ifndef CL32_keyboard_h
-#define CL32_keyboard_h
+#ifndef CL32_core_h
+#define CL32_core_h
 #include "CL32_pins.h"
 #include "Arduino.h" 
-
-const byte KB_ADDRESS = 0x34;
 
 struct Key {
   int lower;
@@ -39,10 +37,10 @@ struct Event {
   bool isChar;
 };
 
-class CL32_keyboard {
+class CL32_core {
 	using CL32_KB_t = void (*)(void);
 public:
-	CL32_keyboard();
+	CL32_core();
 	void init();
 	void read();
     void add_callback(CL32_KB_t act);
@@ -50,12 +48,19 @@ public:
 	void trigger_callback();
 	Event getKey();
 	byte eventCount();
+    int getVoltage();
+	int getPercent();
+	bool getUSB();
+	bool getCharging();
 	toggleState _shift;
 	toggleState _fn;
 private:
-	Key _matrix[80];
+	Key _matrix[127];
 	CL32_KB_t _action, _lastAction;
 	Event _eventLog[20];
 	byte _eventCount;
+    int  _CL32voltage;
+	bool _CL32usb;
+	bool _CL32charging;
 };
 #endif

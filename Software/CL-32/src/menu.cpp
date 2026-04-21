@@ -28,8 +28,8 @@ void change_app(bool increment){
 
 //callback function for deciding what the menu does with the keyboard evenrs
 void menu_keys(){
-    for(byte i = _keys.eventCount();i>0;i--){
-        Event eTemp = _keys.getKey();
+    for(byte i = _CL32.eventCount();i>0;i--){
+        Event eTemp = _CL32.getKey();
         if(eTemp.keyDown){
             if(!eTemp.isChar){
                 if(eTemp.keyData==KB_DOWN){
@@ -50,31 +50,31 @@ void menu_keys(){
     }
     if(isMenu==OFF){        
         if(currentApp==EDIT){
-            _keys.add_callback(editor_keys);
+            _CL32.add_callback(editor_keys);
             draw_editor(fastAppSwitch);
         }
         else if(currentApp==CALC){
-            _keys.add_callback(calc_keys);
+            _CL32.add_callback(calc_keys);
             draw_calc(fastAppSwitch);
         }
         else if(currentApp==TODO){
-            _keys.add_callback(todo_keys);
+            _CL32.add_callback(todo_keys);
             draw_todo(fastAppSwitch);
         }
         else if(currentApp==CAL){
-            _keys.add_callback(cal_keys);
+            _CL32.add_callback(cal_keys);
             draw_cal(fastAppSwitch);
         }
         else if(currentApp==AUTH){
-            _keys.add_callback(twofa_keys);
+            _CL32.add_callback(twofa_keys);
             draw_twofa(fastAppSwitch);
         }
         else if(currentApp==READ){
-            _keys.add_callback(reader_keys);
+            _CL32.add_callback(reader_keys);
             draw_reader(fastAppSwitch);
         }
         else if(currentApp==SET){
-            _keys.add_callback(set_keys);
+            _CL32.add_callback(set_keys);
             draw_set(fastAppSwitch);
         }
     }
