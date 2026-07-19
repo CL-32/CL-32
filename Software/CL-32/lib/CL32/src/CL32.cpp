@@ -6,7 +6,7 @@ CL32_rtc _time;
 CL32_file _code;
 CL32_core _CL32;
 //enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};    
-const String appNames[] = { "Editor", "Calculator", "To-Do List","Calendar","2FA Auth","E-Reader", "Settings" }; 
+const String appNames[] = { "Editor", "Calculator", "To-Do List","Calendar","2FA Auth","E-Reader", "Settings","Power Off" }; 
 MenuState isMenu = ON;              
 AppList currentApp = EDIT;          
 AppList newApp = EDIT;     

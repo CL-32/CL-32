@@ -213,7 +213,7 @@ void CL32_screen::addHead(String title){
         display.print(title);
         display.setCursor((display.width()/2)-(12*2.5),10);
         display.print(_time.getTimeText());
-        display.setCursor(display.width()-50,10);
+        display.setCursor(display.width()-60,10);
         if (_CL32._shift==UNPRESSED){
         display.print("abc");
         }
@@ -233,13 +233,8 @@ void CL32_screen::addHead(String title){
             display.setTextColor(darkMode?GxEPD_WHITE:GxEPD_BLACK);
             display.print("fn");
         }
-        display.setCursor(0,display.width()-30);
         if(_CL32.getUSB()){
-            display.print("U");
-        }
-        display.setCursor(0,display.width()-20);
-        if(_CL32.getCharging()){
-            display.print("C");
+            display.drawBitmap(display.width()-28,10,plug_EPD,12,12,darkMode?GxEPD_WHITE:GxEPD_BLACK);
         }
         display.drawLine(display.width()-11,0,display.width()-1,0,darkMode?GxEPD_WHITE:GxEPD_BLACK);
         display.drawLine(display.width()-11,12,display.width()-1,12,darkMode?GxEPD_WHITE:GxEPD_BLACK);
@@ -248,27 +243,33 @@ void CL32_screen::addHead(String title){
         display.drawLine(display.width()-12,2,display.width()-12,12-2,darkMode?GxEPD_WHITE:GxEPD_BLACK);
         display.drawLine(display.width()-13,2,display.width()-13,12-2,darkMode?GxEPD_WHITE:GxEPD_BLACK);
         //battery bars
-        int iVolt = _CL32.getVoltage();
-        if (iVolt > 3300){
-        display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.3v
+        display.setCursor(display.width()-10,10);
+        if(_CL32.getCharging()){
+            display.print("+");
         }
-        if (iVolt > 3300){
-        display.drawLine(display.width()-4,2,display.width()-4,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.5v
-        }
-        if (iVolt > 3700){
-        display.drawLine(display.width()-5,2,display.width()-5,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.7v
-        }
-        if (iVolt > 3800){
-        display.drawLine(display.width()-6,2,display.width()-6,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.8v
-        }
-        if (iVolt > 3900){
-        display.drawLine(display.width()-7,2,display.width()-7,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.9v
-        }
-        if (iVolt > 4000){
-        display.drawLine(display.width()-8,2,display.width()-8,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //4.0v
-        }
-        if (iVolt > 4100){
-        display.drawLine(display.width()-9,2,display.width()-9,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //4.1v+
+        else{
+            int iVolt = _CL32.getVoltage();
+            if (iVolt > 3300){
+            display.drawLine(display.width()-3,2,display.width()-3,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.3v
+            }
+            if (iVolt > 3300){
+            display.drawLine(display.width()-4,2,display.width()-4,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.5v
+            }
+            if (iVolt > 3700){
+            display.drawLine(display.width()-5,2,display.width()-5,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.7v
+            }
+            if (iVolt > 3800){
+            display.drawLine(display.width()-6,2,display.width()-6,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.8v
+            }
+            if (iVolt > 3900){
+            display.drawLine(display.width()-7,2,display.width()-7,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //3.9v
+            }
+            if (iVolt > 4000){
+            display.drawLine(display.width()-8,2,display.width()-8,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //4.0v
+            }
+            if (iVolt > 4100){
+            display.drawLine(display.width()-9,2,display.width()-9,iFontH-2,darkMode?GxEPD_WHITE:GxEPD_BLACK); //4.1v+
+            }
         }
         display.drawLine(0,12+2,display.width()-1,12+2,darkMode?GxEPD_WHITE:GxEPD_BLACK);
     } 
@@ -278,7 +279,7 @@ void CL32_screen::addHead(String title){
         u8g2.print(title);
         u8g2.setCursor((u8g2.getDisplayWidth()/2)-(12*2.5),11);
         u8g2.print(_time.getTimeText());
-        u8g2.setCursor(u8g2.getDisplayWidth()-50,11);
+        u8g2.setCursor(u8g2.getDisplayWidth()-60,11);
         if (_CL32._shift==UNPRESSED){
         u8g2.print("abc");
         }
@@ -291,20 +292,15 @@ void CL32_screen::addHead(String title){
         u8g2.setCursor(u8g2.getDisplayWidth()-85,11);
         if (_CL32._fn==LOCKPRESS){
             u8g2.drawBox(u8g2.getDisplayWidth()-85,0,23,12);
-            u8g2.setDrawColor(darkMode?0:1);
-            u8g2.print("fn");
             u8g2.setDrawColor(darkMode?1:0);
+            u8g2.print("fn");
+            u8g2.setDrawColor(darkMode?0:1);
         }
         else if (_CL32._fn==ONEPRESS){
             u8g2.print("fn");
         }
-        u8g2.setCursor(0,u8g2.getDisplayWidth()-30);
         if(_CL32.getUSB()){
-            u8g2.print("U");
-        }
-        u8g2.setCursor(0,u8g2.getDisplayWidth()-20);
-        if(_CL32.getCharging()){
-            u8g2.print("C");
+            u8g2.drawXBM(u8g2.getDisplayWidth()-28,1,12,12,plug_u8g2);
         }
         u8g2.drawLine(u8g2.getDisplayWidth()-11,0,u8g2.getDisplayWidth()-1,0);
         u8g2.drawLine(u8g2.getDisplayWidth()-11,12,u8g2.getDisplayWidth()-1,12);
@@ -313,27 +309,33 @@ void CL32_screen::addHead(String title){
         u8g2.drawLine(u8g2.getDisplayWidth()-12,2,u8g2.getDisplayWidth()-12,12-2);
         u8g2.drawLine(u8g2.getDisplayWidth()-13,2,u8g2.getDisplayWidth()-13,12-2);
         //battery bars
-        int iVolt = _CL32.getVoltage();
-        if (iVolt > 3300){
-        u8g2.drawLine(u8g2.getDisplayWidth()-3,2,u8g2.getDisplayWidth()-3,iFontH-2); //3.3v
+        u8g2.setCursor(u8g2.getDisplayWidth()-10,11);
+        if(_CL32.getCharging()){
+            u8g2.print("+");
         }
-        if (iVolt > 3300){
-        u8g2.drawLine(u8g2.getDisplayWidth()-4,2,u8g2.getDisplayWidth()-4,iFontH-2); //3.5v
-        }
-        if (iVolt > 3700){
-        u8g2.drawLine(u8g2.getDisplayWidth()-5,2,u8g2.getDisplayWidth()-5,iFontH-2); //3.7v
-        }
-        if (iVolt > 3800){
-        u8g2.drawLine(u8g2.getDisplayWidth()-6,2,u8g2.getDisplayWidth()-6,iFontH-2); //3.8v
-        }
-        if (iVolt > 3900){
-        u8g2.drawLine(u8g2.getDisplayWidth()-7,2,u8g2.getDisplayWidth()-7,iFontH-2); //3.9v
-        }
-        if (iVolt > 4000){
-        u8g2.drawLine(u8g2.getDisplayWidth()-8,2,u8g2.getDisplayWidth()-8,iFontH-2); //4.0v
-        }
-        if (iVolt > 4100){
-        u8g2.drawLine(u8g2.getDisplayWidth()-9,2,u8g2.getDisplayWidth()-9,iFontH-2); //4.1v+
+        else{
+            int iVolt = _CL32.getVoltage();
+            if (iVolt > 3300){
+            u8g2.drawLine(u8g2.getDisplayWidth()-3,2,u8g2.getDisplayWidth()-3,iFontH-2); //3.3v
+            }
+            if (iVolt > 3300){
+            u8g2.drawLine(u8g2.getDisplayWidth()-4,2,u8g2.getDisplayWidth()-4,iFontH-2); //3.5v
+            }
+            if (iVolt > 3700){
+            u8g2.drawLine(u8g2.getDisplayWidth()-5,2,u8g2.getDisplayWidth()-5,iFontH-2); //3.7v
+            }
+            if (iVolt > 3800){
+            u8g2.drawLine(u8g2.getDisplayWidth()-6,2,u8g2.getDisplayWidth()-6,iFontH-2); //3.8v
+            }
+            if (iVolt > 3900){
+            u8g2.drawLine(u8g2.getDisplayWidth()-7,2,u8g2.getDisplayWidth()-7,iFontH-2); //3.9v
+            }
+            if (iVolt > 4000){
+            u8g2.drawLine(u8g2.getDisplayWidth()-8,2,u8g2.getDisplayWidth()-8,iFontH-2); //4.0v
+            }
+            if (iVolt > 4100){
+            u8g2.drawLine(u8g2.getDisplayWidth()-9,2,u8g2.getDisplayWidth()-9,iFontH-2); //4.1v+
+            }
         }
         u8g2.drawLine(0,12+2,u8g2.getDisplayWidth()-1,12+2);
     }
@@ -362,9 +364,9 @@ void CL32_screen::showMsg(char *textIn){
         x = (u8g2.getDisplayWidth() - w)/2;
         y = (u8g2.getDisplayHeight() - h)/2;
         u8g2.drawBox(x-iPad,y-iPad,w+(iPad*2),h+(iPad*2));
-        u8g2.setDrawColor(darkMode?0:1);
-        u8g2.drawBox(x-(iPad/2),y-(iPad/2),w+iPad,h+iPad);
         u8g2.setDrawColor(darkMode?1:0);
+        u8g2.drawBox(x-(iPad/2),y-(iPad/2),w+iPad,h+iPad);
+        u8g2.setDrawColor(darkMode?0:1);
         u8g2.setCursor(x,y+((h+iPad)/2));
         u8g2.print(textIn);
         u8g2.sendBuffer();

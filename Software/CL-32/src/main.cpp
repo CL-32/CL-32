@@ -2,15 +2,15 @@
 #include "CL32.h"
 
 int refreshCount;
-bool i2c_int;
+volatile bool i2c_int = false;
 
-void letsGo(){
+void IRAM_ATTR letsGo(){
   i2c_int = true;
 }
 
 void setInterrupt(){
   //reset the correct interrupt after we have woken from sleep
-  if(!blockSleep&&doSleep){
+  if(!blockSleep&&doSleep&&!_CL32.getUSB()){
     detachInterrupt(CL32_int);
     if (esp_sleep_enable_ext0_wakeup(GPIO_NUM_3, 0) != ESP_OK) {
         _screen.showMsg("GPIO interrupt failed");
@@ -49,7 +49,7 @@ void loop() {
     refreshCount = 0;
     if(i2c_int) i2c_int = false;
     setInterrupt();
-    if(!blockSleep&&doSleep){
+    if(!blockSleep&&doSleep&&!_CL32.getUSB()){
       esp_light_sleep_start();
     } 
   }

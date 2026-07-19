@@ -10,12 +10,14 @@ void change_app(bool increment){
             case CAL: newApp =  AUTH; break;
             case AUTH: newApp =  READ; break;
             case READ: newApp =  SET; break;
-            case SET: newApp = EDIT;
+            case SET: newApp = POWER; break;
+            case POWER: newApp = EDIT;
         }
     }
     else{
         switch (newApp) {
-            case EDIT: newApp =  SET; break;
+            case EDIT: newApp =  POWER; break;
+            case POWER: newApp =  SET; break;
             case CALC: newApp = EDIT; break;
             case TODO: newApp =  CALC; break;
             case CAL: newApp =  TODO; break;
@@ -77,6 +79,11 @@ void menu_keys(){
             _CL32.add_callback(set_keys);
             draw_set(fastAppSwitch);
         }
+        else if(currentApp==POWER){
+            _screen.clearScreen(false,true);
+            _screen.showMsg("Powered Off");
+            _CL32.shutdown();
+        }
     }
     else{
         draw_menu(true);
@@ -87,14 +94,24 @@ void menu_keys(){
 void draw_menu(bool goFast){
     _screen.clearScreen(false,goFast);
     _screen.addHead("Menu");
+    byte listOffset;
+    if(newApp < 4){
+        listOffset = 0;
+    }
+    else if(newApp > 4){
+        listOffset = 1;
+    }
+    else{
+        listOffset = newApp - 3;
+    }
     for(byte i = 0;i<7;i++){
-        if(i==newApp){
+        if(i+listOffset==newApp){
             _screen.setFont(12,true,false);
         }
         else{
             _screen.setFont(12,false,false);
         }
-        _screen.addText(appNames[i],20,40+(i*20),true);
+        _screen.addText(appNames[i+listOffset],20,40+(i*20),true);
     }
     _screen.show(goFast);
 }

@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include "CL32.h"
 #include "CL32_core.h"
+#include "regMap.h"
 
 //some keyboard things mapping to make things readable
 byte KB_SHIFT = 225;
@@ -22,53 +23,41 @@ byte KB_HOME = 74;
 byte KB_END = 77;
 
 CL32_core::CL32_core() {
-    byte bStatus;
     _eventCount= 0;
     //start the i2c
     Wire.begin(CL32_sda,CL32_scl);
-
-
-    Wire.beginTransmission(CORE_ADDRESS);
-    Wire.write(0x02);//0x02 is where we start
-    Wire.endTransmission();
-    Wire.requestFrom(CORE_ADDRESS,3);
-    while(Wire.available() < 1);//sit and wait for response
-    bStatus = Wire.read();
-	_CL32usb = bitRead(bStatus,1);
-	_CL32charging = bitRead(bStatus,1);
-    Wire.endTransmission();
     //could make a keymap in here
     //i guess this could be loaded in from a file...
     _matrix[0]  = { 0 ,	     0 ,    0 ,     0 };//no key pressed
     _matrix[1]  = { 0 ,	     0 ,    0 ,     0 };//keyboard roll over fail
     _matrix[2]  = { 0 ,	     0 ,    0 ,     0 };//keyboard POST fail
     _matrix[3]  = { 0 ,	     0 ,    0 ,     0 };//keyboard error undefined
-    _matrix[4]  = {'a',     'A',	'@',    true};//a
-    _matrix[5]  = {'b',     'B',    '£',    true};//b
-    _matrix[6]  = {'c',     'C',	'$',    true};//c
-    _matrix[7]  = {'d',     'D',	'%',    true};//d
-    _matrix[8]  = {'e',     'E',	'^',    true};//e
-    _matrix[9]  = {'f',     'F',	'&',    true};//f
-    _matrix[10] = {'g' ,	'G' ,    0 ,    true};//g
-    _matrix[11] = {'h',     'H',KB_SHIFT ,  true};//h
-    _matrix[12] = {'i',     'I',	'|',    true};//i
-    _matrix[13] = {'j',     'J',	'#',    true};//j
-    _matrix[14] = {'k',     'K',	',',    true};//k
-    _matrix[15] = {'l',     'L',	'?',    true};//l
-    _matrix[16] = {'m',     'M',	'\'',   true};//m
-    _matrix[17] = {'n',     'N',	':',    true};//n
-    _matrix[18] = {'o',     'O',    ';',    true};//o
-    _matrix[19] = {'p',     'P',	'{',    true};//p
-    _matrix[20] = {'q',	    'Q',	    0 , true};//q
-    _matrix[21] = {'r',     'R',  KB_FN,    true};//r
-    _matrix[22] = {'s',     'S',	' ',    true};//s
-    _matrix[23] = {'t',     'T',	'\\',   true};//t
-    _matrix[24] = {'u',     'U',	'~',    true};//u
-    _matrix[25] = {'v',     'V',	' ' ,   true};//v
-    _matrix[26] = {'w',     'W',	' ' ,   true};//w
-    _matrix[27] = {'x',     'X',	'<',    true};//x
-    _matrix[28] = {'y',     'Y',	'>',    true};//y
-    _matrix[29] = {'z',     'Z',	'[',    true};//z
+    _matrix[4]  = {'a',     'A',	'|',    true};//a
+    _matrix[5]  = {'b',     'B',    '>',    true};//b
+    _matrix[6]  = {'c',     'C',	'~',    true};//c
+    _matrix[7]  = {'d',     'D',	',',    true};//d
+    _matrix[8]  = {'e',     'E',	'@',    true};//e
+    _matrix[9]  = {'f',     'F',	'?',    true};//f
+    _matrix[10] = {'g' ,	'G',   '\'',    true};//g
+    _matrix[11] = {'h',     'H',    ':',    true};//h
+    _matrix[12] = {'i',     'I',	'&',    true};//i
+    _matrix[13] = {'j',     'J',	';',    true};//j
+    _matrix[14] = {'k',     'K',	'{',    true};//k
+    _matrix[15] = {'l',     'L',	'}',    true};//l
+    _matrix[16] = {'m',     'M',	']',    true};//m
+    _matrix[17] = {'n',     'N',	'[',    true};//n
+    _matrix[18] = {'o',     'O',    '(',    true};//o
+    _matrix[19] = {'p',     'P',	')',    true};//p
+    _matrix[20] = {'q',	    'Q',	'!',    true};//q
+    _matrix[21] = {'r',     'R',    '£',    true};//r
+    _matrix[22] = {'s',     'S',	'#',    true};//s
+    _matrix[23] = {'t',     'T',	'$',    true};//t
+    _matrix[24] = {'u',     'U',	'^',    true};//u
+    _matrix[25] = {'v',     'V',	'<',    true};//v
+    _matrix[26] = {'w',     'W',	'"',    true};//w
+    _matrix[27] = {'x',     'X',   '\\',    true};//x
+    _matrix[28] = {'y',     'Y',	'%',    true};//y
+    _matrix[29] = {'z',     'Z',	0  ,    true};//z
     _matrix[30] = { 0 ,	    0 ,	    0 ,     0 };//1
     _matrix[31] = { 0 ,	    0 ,	    0 ,     0 };//2
     _matrix[32] = { 0 ,	    0 ,	    0 ,     0 };//3
@@ -85,7 +74,7 @@ CL32_core::CL32_core() {
     _matrix[43] = { 0 ,	    0 ,	    0 ,     0 };//tab
     _matrix[44] = {' ',    ' ',    ' ',    true};//spacebar
     _matrix[45] = { 0 ,	    0 ,	    0 ,     0 };//- or _
-    _matrix[46] = { 0 ,	    0 ,	    0 ,     0 };//= or +
+    _matrix[46] = {'=',    '=',    '=',    true};//= or +
     _matrix[47] = { 0 ,	    0 ,	    0 ,     0 };//{ or [
     _matrix[48] = { 0 ,	    0 ,	    0 ,     0 };//} or ]
     _matrix[49] = { 0 ,	    0 ,	    0 ,     0 };//\ or |
@@ -94,7 +83,7 @@ CL32_core::CL32_core() {
     _matrix[52] = { 0 ,	    0 ,	    0 ,     0 };//' or "
     _matrix[53] = { 0 ,	    0 ,	    0 ,     0 };//` or ~
     _matrix[54] = { 0 ,	    0 ,	    0 ,     0 };//, or <
-    _matrix[55] = { 0 ,	    0 ,	    0 ,     0 };//. or >
+    _matrix[55] = {'.',	    0 ,	    0 ,     0 };//. or >
     _matrix[56] = { 0 ,	    0 ,	    0 ,     0 };// / or ?
     _matrix[57] = { 0 ,	    0 ,	    0 ,     0 };//capslock
     _matrix[58] = { 0 ,	    0 ,	    0 ,     0 };//f1
@@ -170,8 +159,37 @@ CL32_core::CL32_core() {
     
 }
 void CL32_core::init(){
+    byte bStatus;
     //start up the keyboard
     //we dont need to set anything up anymore, it just works!! TM
+    Wire.beginTransmission(CORE_ADDRESS);
+    Wire.write(CL32_SUPPLY);//0x02 is where we start
+    Wire.endTransmission();
+    if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+        _CL32supply = Wire.read();
+        _CL32supply = _CL32supply * 25;
+    }
+    Wire.beginTransmission(CORE_ADDRESS);
+    Wire.write(CL32_VOLTAGE);//0x02 is where we start
+    Wire.endTransmission();
+    if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+        _CL32voltage = Wire.read();
+        _CL32voltage = _CL32voltage * 25;
+    }
+    Wire.beginTransmission(CORE_ADDRESS);
+    Wire.write(CL32_STATUS);//0x02 is where we start
+    Wire.endTransmission();
+    if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+        bStatus = Wire.read();
+    }
+	_CL32usb = bitRead(bStatus,1);
+	_CL32charging = bitRead(bStatus,2);
+    Wire.endTransmission();
+    //reset the interruot status
+    Wire.beginTransmission(CORE_ADDRESS);
+    Wire.write(CL32_INTERRUPT);//0x02 is the interrupt register
+    Wire.write(0x00);//setting a bit to 0 clears its interrupt
+    Wire.endTransmission();
 }  
 
 void CL32_core::read(){
@@ -180,130 +198,138 @@ void CL32_core::read(){
     bool bEventStat, bRefresh = false;
     //get the voltage
     Wire.beginTransmission(CORE_ADDRESS);
-    Wire.write(0x00);//0x02 is where we start
+    Wire.write(CL32_SUPPLY);//0x02 is where we start
     Wire.endTransmission();
-    Wire.requestFrom(CORE_ADDRESS,1);
-    while(Wire.available() < 1);//sit and wait for response
-    _CL32voltage = Wire.read();
-    _CL32voltage = _CL32voltage * 25;
-    Wire.endTransmission();
-
+    if(Wire.requestFrom(CORE_ADDRESS,3)!=0){
+        _CL32supply = Wire.read();
+        _CL32supply = _CL32supply * 25;
+    }
     Wire.beginTransmission(CORE_ADDRESS);
-    Wire.write(0x01);//0x02 is where we start
+    Wire.write(CL32_VOLTAGE);//0x02 is where we start
     Wire.endTransmission();
-    Wire.requestFrom(CORE_ADDRESS,1);
-    while(Wire.available() < 1);//sit and wait for response
-    bStatus = Wire.read();
-    Wire.endTransmission();
-
-
+    if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+        _CL32voltage = Wire.read();
+        _CL32voltage = _CL32voltage * 25;
+    }
     Wire.beginTransmission(CORE_ADDRESS);
-    Wire.write(0x02);//0x02 is where we start
+    Wire.write(CL32_INTERRUPT);//0x02 is where we start
     Wire.endTransmission();
-    Wire.requestFrom(CORE_ADDRESS,1);
-    while(Wire.available() < 1);//sit and wait for response
-    bInterrupt = Wire.read();
+    if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+        bInterrupt = Wire.read();
+    }
     Wire.endTransmission();
-    
     //check for keypress
     if (bitRead(bInterrupt,0)){
         Wire.beginTransmission(CORE_ADDRESS);
-        Wire.write(0x03);//0x03 is the buffer count
+        Wire.write(CL32_EVENT_COUNT);//0x03 is the buffer count
         Wire.endTransmission();
         //read the contents
-        Wire.requestFrom(CORE_ADDRESS,1);
-        while(Wire.available() < 1);//sit and wait for response
-        //read the value
-        bCount = Wire.read();
+        if(Wire.requestFrom(CORE_ADDRESS,1)!=0){//sit and wait for response
+            //read the value
+            bCount = Wire.read();
+        }
         //if there is anything available, grab events
         while(bCount > 0){
             //the buffer is magic, when you read an event, it pops them
             //all back down the list so that you just keep reading the 
             //first item until you run out
             Wire.beginTransmission(CORE_ADDRESS);
-            Wire.write(0x04);//0x04 is the fist event
+            Wire.write(CL32_EVENT1);//0x04 is the fist event
             Wire.endTransmission();
             //read the contents
-            Wire.requestFrom(CORE_ADDRESS,1);
-            while(Wire.available() < 1);//sit and wait for response
-            //read the value
-            bEvent = Wire.read();
-            bEventCode = bEvent & 0x7f;
-            bEventStat = (bEvent & 0x80)>>7;
-            //lets process shift/fn here, so we dont have to do it later
-            if(bEventStat==1){//we only care about button going down at the moment
-            bRefresh = true;//flag that there is something to update, even if its not being added to the buffer
-            if(_matrix[bEventCode].lower==KB_SHIFT){
-                switch (_shift) {
-                    case UNPRESSED: _shift =  ONEPRESS; break;
-                    case ONEPRESS: _shift = LOCKPRESS; break;
-                    case LOCKPRESS: _shift = UNPRESSED;
-                }
-            }
-            else if(_matrix[bEventCode].lower==KB_FN){
-                switch (_fn) {
-                    case UNPRESSED: _fn =  ONEPRESS; break;
-                    case ONEPRESS: _fn = LOCKPRESS; break;
-                    case LOCKPRESS: _fn = UNPRESSED;
-                }
-            }
-            else if(_matrix[bEventCode].lower==KB_MENU){
-                switch (isMenu) {
-                    case OFF: isMenu =  ON; break;
-                    case ON: isMenu = OFF; break;
-                    case SUB: isMenu = ON;
-                }
-            }
-            else if(_matrix[bEventCode].lower==KB_FILE){
-                switch (isMenu) {
-                    case OFF: isMenu =  SUB; break;
-                    case SUB: isMenu = OFF;
-                    //if the menu is on, we dont do anything, the file button is redundant when in the menu mode
-                }
-            }
-            else{
-                //add the event to the global register
-                if(_fn!=UNPRESSED){
-                    _eventLog[_eventCount] = {_matrix[bEventCode].func,bEventStat,_matrix[bEventCode].isChar};
-                    if(_fn==ONEPRESS){//we are not at lock yet
-                        _fn=UNPRESSED;
+            if(Wire.requestFrom(CORE_ADDRESS,1)!=0){//sit and wait for response
+                //read the value
+                bEvent = Wire.read();
+                bEventCode = bEvent & 0x7f;
+                bEventStat = (bEvent & 0x80)>>7;
+                //lets process shift/fn here, so we dont have to do it later
+                if(bEventStat==1){//we only care about button going down at the moment
+                    bRefresh = true;//flag that there is something to update, even if its not being added to the buffer
+                    if(_matrix[bEventCode].lower==KB_SHIFT){
+                        switch (_shift) {
+                            case UNPRESSED: _shift =  ONEPRESS; break;
+                            case ONEPRESS: _shift = LOCKPRESS; break;
+                            case LOCKPRESS: _shift = UNPRESSED;
+                        }
+                    }
+                    else if(_matrix[bEventCode].lower==KB_FN){
+                        switch (_fn) {
+                            case UNPRESSED: _fn =  ONEPRESS; break;
+                            case ONEPRESS: _fn = LOCKPRESS; break;
+                            case LOCKPRESS: _fn = UNPRESSED;
+                        }
+                    }
+                    else if(_matrix[bEventCode].lower==KB_MENU){
+                        switch (isMenu) {
+                            case OFF: isMenu =  ON; break;
+                            case ON: isMenu = OFF; break;
+                            case SUB: isMenu = ON;
+                        }
+                    }
+                    else if(_matrix[bEventCode].lower==KB_FILE){
+                        switch (isMenu) {
+                            case OFF: isMenu =  SUB; break;
+                            case SUB: isMenu = OFF;
+                            //if the menu is on, we dont do anything, the file button is redundant when in the menu mode
+                        }
+                    }
+                    else{
+                        //add the event to the global register
+                        if(_fn!=UNPRESSED){
+                            _eventLog[_eventCount] = {_matrix[bEventCode].func,bEventStat,_matrix[bEventCode].isChar};
+                            if(_fn==ONEPRESS){//we are not at lock yet
+                                _fn=UNPRESSED;
+                            }
+                        }
+                        else if(_shift!=UNPRESSED){
+                            _eventLog[_eventCount] = {_matrix[bEventCode].upper,bEventStat,_matrix[bEventCode].isChar};
+                            if(_shift==ONEPRESS){//we are not at lock yet
+                                _shift=UNPRESSED;
+                            }
+                        }
+                        else{
+                            _eventLog[_eventCount] = {_matrix[bEventCode].lower,bEventStat,_matrix[bEventCode].isChar};
+                        }
+                        _eventCount++;
                     }
                 }
-                else if(_shift!=UNPRESSED){
-                    _eventLog[_eventCount] = {_matrix[bEventCode].upper,bEventStat,_matrix[bEventCode].isChar};
-                    if(_shift==ONEPRESS){//we are not at lock yet
-                        _shift=UNPRESSED;
-                    }
-                }
-                else{
-                    _eventLog[_eventCount] = {_matrix[bEventCode].lower,bEventStat,_matrix[bEventCode].isChar};
-                }
-                _eventCount++;
             }
+            //rather than just dropping the count, lets re-read
+            Wire.beginTransmission(CORE_ADDRESS);
+            Wire.write(CL32_EVENT_COUNT);//0x03 is the buffer count
+            Wire.endTransmission();
+            //read the contents
+            if(Wire.requestFrom(CORE_ADDRESS,1)!=0){//sit and wait for response
+                //read the value
+                bCount = Wire.read();
             }
-            bCount --;
         }//reset the fact there have been keys pressed
+        bitClear(bInterrupt,0);
     }
-    //check for USB plug state change
-    if (bitRead(bInterrupt,1)){
+    //check for status change
+    if (bitRead(bInterrupt,1)||bitRead(bInterrupt,2)){
+        Wire.beginTransmission(CORE_ADDRESS);
+        Wire.write(CL32_STATUS);//0x02 is where we start
+        Wire.endTransmission();
+        if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+            bStatus = Wire.read();
+        }
         bRefresh = true;
 	    _CL32usb = bitRead(bStatus,1);
-    }
-    //check for Charge state change
-    if (bitRead(bInterrupt,2)){
-        bRefresh = true;        
-	    _CL32charging = bitRead(bStatus,1);
+	    _CL32charging = bitRead(bStatus,2);//unplugging the usb will stop it charging!!
+        bitClear(bInterrupt,1);
+        bitClear(bInterrupt,2);
     }
     //need to trigger the callback function for whatever app is live
     //we only need to trigger the callback if there is anything to process
     if(bRefresh){
         _action();
     }
-    //reset the interruot status
+    //reset the interrupt status
     Wire.beginTransmission(CORE_ADDRESS);
-    Wire.write(0x02);//0x02 is the interrupt register
-    Wire.write(0x00);//setting a bit to 0 clears its interrupt
-    Wire.endTransmission();
+    Wire.write(CL32_INTERRUPT);//0x02 is the interrupt register
+    Wire.write(bInterrupt);//setting a bit to 0 clears its interrupt
+    Wire.endTransmission();  
 }
 void CL32_core::add_callback(CL32_KB_t act){
     _lastAction = _action;//save the current callback before setting the new one
@@ -338,6 +364,11 @@ byte CL32_core::eventCount(){
 int CL32_core::getVoltage(){
     return _CL32voltage;
 }
+
+int CL32_core::getSupply(){
+    return _CL32supply;
+}
+
 int CL32_core::getPercent(){
     return 50;
 }
@@ -347,4 +378,18 @@ bool CL32_core::getUSB(){
 }
 bool CL32_core::getCharging(){
     return _CL32charging;
+}
+void CL32_core::shutdown(){
+    byte bTemp;
+    Wire.beginTransmission(CORE_ADDRESS);
+    Wire.write(CL32_STATUS);//0x02 is where we start
+    Wire.endTransmission();
+    if(Wire.requestFrom(CORE_ADDRESS,1)!=0){
+        bTemp = Wire.read();
+    }
+    bitWrite(bTemp,7,true);
+    Wire.beginTransmission(CORE_ADDRESS);
+    Wire.write(CL32_STATUS);//0x02 is the interrupt register
+    Wire.write(bTemp);//setting a bit to 0 clears its interrupt
+    Wire.endTransmission();
 }

@@ -16,7 +16,7 @@ extern CL32_core _CL32;
 enum MenuState {ON,OFF,SUB};      
 extern MenuState isMenu;          
 
-enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET};      
+enum AppList {EDIT,CALC,TODO,CAL,AUTH,READ,SET,POWER};      
 extern AppList currentApp, newApp;         
 extern const String appNames[];  
 

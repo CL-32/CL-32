@@ -32,7 +32,7 @@ extern byte KB_HOME;
 extern byte KB_END;
 
 struct Event {
-  int keyData;
+  uint8_t keyData;
   bool keyDown;
   bool isChar;
 };
@@ -49,9 +49,11 @@ public:
 	Event getKey();
 	byte eventCount();
     int getVoltage();
+    int getSupply();
 	int getPercent();
 	bool getUSB();
 	bool getCharging();
+	void shutdown();
 	toggleState _shift;
 	toggleState _fn;
 private:
@@ -60,6 +62,7 @@ private:
 	Event _eventLog[20];
 	byte _eventCount;
     int  _CL32voltage;
+    int  _CL32supply;
 	bool _CL32usb;
 	bool _CL32charging;
 };
