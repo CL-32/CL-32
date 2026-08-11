@@ -36,9 +36,10 @@ void sleep() {
           set_brightness(POWER, j);
           _delay_ms(3);
         }
-        clear_pwm_interrupt();
+        set_brightness(POWER, 0);
+        //clear_pwm_interrupt();
         read_usb();
-         read_keys();//just to reset the status
+        read_keys();//just to reset the status
     }
     else if(wakeReason==BUTTON){
       //lets wait for debouncing
@@ -89,8 +90,8 @@ int main(void)
     sei();
     sleep();
     while(1){        
-        if(is_on()){
-            if(loopCount==500000){
+        if(is_on()){      
+            if(loopCount==50000){
                 read_voltage();
                 loopCount=0;
                 //check for low voltage
@@ -103,8 +104,18 @@ int main(void)
             //check for sleep request
             if(bitRead(i2c_regs[CL32_STATUS],7)){
                 bitWrite(i2c_regs[CL32_STATUS],7,false);
-                _delay_ms(200);
-                set_brightness(BACKLIGHT,0);
+                while(read_key(1,4)==0){
+                  //sit and wait
+                }
+                _delay_ms(500);
+                sleep();
+            }
+            if(killCount>1500){
+                esp_off();//make it clear it is off
+                while(read_key(1,4)==0){
+                  //sit and wait
+                }
+                _delay_ms(500);
                 sleep();
             }
             //backlight shenanigans
@@ -131,7 +142,7 @@ int main(void)
             //}
         }
         else{
-            if(loopCount==100000){
+            if(loopCount==50000){
                 if(bitRead(i2c_regs[CL32_STATUS],1)==0){
                     //charging done or usb removed
                     sleep();
@@ -144,11 +155,11 @@ int main(void)
                 else{
                     currentLED = GRN;
                     set_brightness(POWER, 125);
-                    _delay_ms(200);
+                    _delay_ms(150);
                     set_brightness(POWER, 0);
-                    _delay_ms(200);
+                    _delay_ms(150);
                     set_brightness(POWER, 125);
-                    _delay_ms(200);
+                    _delay_ms(150);
                     set_brightness(POWER, 0);
                 }
                 loopCount=0;
@@ -157,7 +168,7 @@ int main(void)
             //check for the power button
             if(read_key(1,4)==0){
                 //the button is down, lets flash some stuff
-                set_pwm_interrupt();
+                //set_pwm_interrupt();
                 for(int i=0;i<5;i++){
                   //if(i%2==0){
                   for(uint8_t j=0;j<255;j++){

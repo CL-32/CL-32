@@ -158,8 +158,7 @@ void clear_key_interrupt(void){
 }
 
 void read_keys(void){
-    uint8_t r, c, changeCount, temp;
-    changeCount=0;
+    uint8_t r, c;
     for(r=0;r<8;r++){//set the rows all high
         ROW_HIGH(r);
     }
@@ -205,6 +204,12 @@ void check_keys(void){
         bitWrite(i2c_regs[CL32_INTERRUPT],0,1);
         set_i2c_flag();
         BLcount = 0;
+    }
+    if(bitRead(i2c_regs[CL32_RAW_ROW1],4)==0 && bitRead(i2c_regs[CL32_RAW_ROW2],2)==0){
+        killCount++;
+    }
+    else{
+        killCount=0;
     }
 }
 

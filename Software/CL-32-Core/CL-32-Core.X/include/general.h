@@ -23,5 +23,6 @@ extern volatile uint16_t BLcount;
 extern volatile uint16_t buttonCount;
 extern volatile uint16_t loopCount;
 extern volatile uint16_t lastKey;
+extern volatile uint16_t killCount;
 
 #endif

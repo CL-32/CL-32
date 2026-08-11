@@ -48,28 +48,24 @@ void clear_usb_interrupt(void){
 void read_voltage(void){
     volatile  uint16_t vSupply, vBatt;
     volatile  uint32_t adc;
-    ADC0.CTRLA = ADC_ENABLE_bm;
-    ADC0.CTRLB = ADC_PRESC_DIV16_gc;        // ADC clock
-    ADC0.CTRLC = VREF_REFSEL_1V024_gc;     // Reference
-    ADC0.CTRLD = 0x00;
-    ADC0.CTRLE = 64;                       // Sample duration
-    ADC0.CTRLF = 0x00;                        // No accumulation, right adjust
-    ADC0.DBGCTRL = 0x01;
-    ADC0.MUXPOS = ADC_MUXPOS_VDD10_gc;//read vcc/10
-    ADC0.MUXNEG = ADC_MUXNEG_GND_gc;//make sure the negative it right
-    ADC0.INTFLAGS = ADC_RESRDY_bm;//reset the adc flags
-    ADC0.COMMAND = ADC_MODE_SINGLE_12BIT_gc | ADC_START_IMMEDIATE_gc;//request the adc
-    while (!(ADC0.INTFLAGS & ADC_RESRDY_bm));//wait for the result
-    // discard first sample`
-    ADC0.INTFLAGS = ADC_RESRDY_bm;//reset the adc flags
-    ADC0.COMMAND = ADC_MODE_SINGLE_12BIT_gc | ADC_START_IMMEDIATE_gc;//request the adc
-    while (!(ADC0.INTFLAGS & ADC_RESRDY_bm));//wait for the result
-    //grab the value
-    adc = ADC0.RESULT;//use the result
-    vSupply = adc * 10;
+    ADC0.CTRLA = ADC_ENABLE_bm; 
+    ADC0.CTRLB = ADC_PRESC_DIV16_gc; // ADC clock 
+    ADC0.CTRLC = ADC_REFSEL_1V024_gc; // Reference 
+    ADC0.CTRLE = 64; // Sample duration 
+    ADC0.CTRLF = 0; // No accumulation, right adjust 
+    ADC0.MUXPOS = ADC_MUXPOS_VDD10_gc;//read vcc/10 
+    ADC0.MUXNEG = ADC_MUXNEG_GND_gc;//make sure the negative it right 
+    ADC0.INTFLAGS = ADC_RESRDY_bm;//reset the adc flags 
+    ADC0.COMMAND = ADC_MODE_SINGLE_12BIT_gc | ADC_START_IMMEDIATE_gc;//request the adc 
+    while (!(ADC0.INTFLAGS & ADC_RESRDY_bm));//wait for the result // discard first sample 
+    ADC0.INTFLAGS = ADC_RESRDY_bm;//reset the adc flags 
+    ADC0.COMMAND = ADC_MODE_SINGLE_12BIT_gc | ADC_START_IMMEDIATE_gc;//request the adc 
+    while (!(ADC0.INTFLAGS & ADC_RESRDY_bm));//wait for the result //grab the value 
+    adc = ADC0.RESULT;//use the result 
+    vSupply = ((1024 * adc) / 4095)* 10; 
     ADC0.INTFLAGS = ADC_RESRDY_bm;//reset the adc flags
     //now read the battery, and compare it against the supply
-    ADC0.CTRLC = VREF_REFSEL_VDD_gc;//supply as reference
+    ADC0.CTRLC = ADC_REFSEL_VDD_gc;//supply as reference
     ADC0.MUXPOS = ADC_MUXPOS_AIN21_gc;//PF5 - AIN21
     ADC0.COMMAND = ADC_MODE_SINGLE_12BIT_gc | ADC_START_IMMEDIATE_gc;//request the adc
     while (!(ADC0.INTFLAGS & ADC_RESRDY_bm));//wait for the result
@@ -84,6 +80,7 @@ void read_voltage(void){
     i2c_regs[CL32_SUPPLY] = vSupply / 25;
     i2c_regs[CL32_VOLTAGE] = vBatt / 25;
     ADC0.CTRLA = 0;//disable the adc
+    VREF.DAC0REF = 0;//disable the dac;
     if (vBatt > 3700){
         currentLED = GRN;
     }
@@ -116,6 +113,7 @@ void check_usb(void){
     if(bChange>0){
         BLcount = 0;
         set_i2c_flag();
+        read_voltage();
     }
     
 }

@@ -17,7 +17,7 @@ void led_init(void){
     PORTD_DIRSET = 0x1;//BL1 LED output mode
     PORTD_DIRSET = 0x2;//BL2 LED output mode
     //set PWM timer settings
-    TCB0.CCMP = 255;// Period value 100 will drag it to the floor, 500 is like a rave
+    TCB0.CCMP = 150;// Period value 100 will drag it to the floor, 500 is like a rave
     TCB0.CTRLB = TCB_CNTMODE_INT_gc;  // Periodic interrupt mode
     TCB0.INTCTRL = TCB_CAPT_bm;// Enable interrupt
     set_pwm_interrupt();
@@ -25,20 +25,20 @@ void led_init(void){
     int j;
     currentLED = RED;
     for(j=0;j<255;j++){
-      PWM_CUR = j; // PA2
+          set_brightness(POWER, j);
       _delay_ms(1);
     }
     for(j=255;j>=0;j--){
-      PWM_CUR = j; // PA2
+          set_brightness(POWER, j);
       _delay_ms(1);
     }
     currentLED = GRN;
     for(j=0;j<255;j++){
-      PWM_CUR = j;  // PA3
+          set_brightness(POWER, j);
       _delay_ms(1);
     }
     for(j=255;j>=0;j--){
-      PWM_CUR = j;  // PA3
+          set_brightness(POWER, j);
       _delay_ms(1);
     }  
     //set hardware PWM  
@@ -92,6 +92,10 @@ void clear_pwm_interrupt(void){
     RED_LED_SetLow();
     GRN_LED_SetLow();
     pwmLED = OFF;
+    //make sure the leds are off too
+    TCA0.SINGLE.CMP0 = 0;
+    TCA0.SINGLE.CMP1 = 0;
+    PWM_CUR = 0;
 }
 
 void set_brightness(led_t choice, uint8_t bright){
