@@ -7,6 +7,8 @@
 
 extern volatile uint8_t keyVal[8][8]; 
 
+extern volatile uint8_t keyStat[8];
+
 extern volatile uint8_t fifo_head;
 extern volatile uint8_t fifo_tail;
 extern volatile uint8_t fifo_count;

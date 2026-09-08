@@ -105,12 +105,14 @@ void set_brightness(led_t choice, uint8_t bright){
         }
         else{ //if pwm is off, we just set the led on, no brightness control  
             if(currentLED == RED){
+                GRN_LED_SetLow();//just to be safe
                 if (bright > 0)
                     RED_LED_SetHigh();
                 else
                     RED_LED_SetLow();
             }
             else{
+                RED_LED_SetLow();//just to be safe
                 if (bright > 0)
                     GRN_LED_SetHigh();
                 else
@@ -127,13 +129,15 @@ void set_brightness(led_t choice, uint8_t bright){
 ISR(TCB0_INT_vect)
 {
     pwm_counter++;
-    if(currentLED == RED){
+    if(currentLED == RED){                
+	GRN_LED_SetLow();//just to be safe
         if (pwm_counter < PWM_CUR)
             RED_LED_SetHigh();
         else
             RED_LED_SetLow();
     }
-    else{
+    else{                
+	RED_LED_SetLow();//just to be safe
         if (pwm_counter < PWM_CUR)
             GRN_LED_SetHigh();
         else

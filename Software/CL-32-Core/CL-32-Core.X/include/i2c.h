@@ -22,19 +22,10 @@
 #define CL32_POWER_BRIGHT 0x0E //power LED brightness
 #define CL32_BL_BRIGHT 0x0F //backlight brightness
 #define CL32_BL_TIME 0x10 //backlight timeout
-#define CL32_RAW_ROW0 0x11 //raw row0 data
-#define CL32_RAW_ROW1 0x12 //raw row1 data
-#define CL32_RAW_ROW2 0x13 //raw row2 data
-#define CL32_RAW_ROW3 0x14 //raw row3 data
-#define CL32_RAW_ROW4 0x15 //raw row4 data
-#define CL32_RAW_ROW5 0x16 //raw row5 data
-#define CL32_RAW_ROW6 0x17 //raw row6 data
-#define CL32_RAW_ROW7 0x18 //raw row7 data
-#define CL32_SUPPLY 0x19 //supply voltage /25
-#define CL32_VOLTAGE 0x1A //battery voltage /25
-#define CL32_SPARE3 0x1B //spare
-#define CL32_SPARE4 0x1C //spare
-#define CL32_SPARE5 0x1D //spare
+#define CL32_FL_BRIGHT 0x11 //screen frontlight brightness
+#define CL32_FL_TIME 0x12 //screen frontlight timeout
+#define CL32_SUPPLY 0x13 //supply voltage /25
+#define CL32_VOLTAGE 0x14 //battery voltage /25
 
 extern volatile uint8_t i2c_regs[30];
 extern volatile uint8_t reg_index;

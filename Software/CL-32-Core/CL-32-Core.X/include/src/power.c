@@ -51,7 +51,7 @@ void read_voltage(void){
     ADC0.CTRLA = ADC_ENABLE_bm; 
     ADC0.CTRLB = ADC_PRESC_DIV16_gc; // ADC clock 
     ADC0.CTRLC = ADC_REFSEL_1V024_gc; // Reference 
-    ADC0.CTRLE = 64; // Sample duration 
+    ADC0.CTRLE = 128; // Sample duration 
     ADC0.CTRLF = 0; // No accumulation, right adjust 
     ADC0.MUXPOS = ADC_MUXPOS_VDD10_gc;//read vcc/10 
     ADC0.MUXNEG = ADC_MUXNEG_GND_gc;//make sure the negative it right 
@@ -80,7 +80,6 @@ void read_voltage(void){
     i2c_regs[CL32_SUPPLY] = vSupply / 25;
     i2c_regs[CL32_VOLTAGE] = vBatt / 25;
     ADC0.CTRLA = 0;//disable the adc
-    VREF.DAC0REF = 0;//disable the dac;
     if (vBatt > 3700){
         currentLED = GRN;
     }

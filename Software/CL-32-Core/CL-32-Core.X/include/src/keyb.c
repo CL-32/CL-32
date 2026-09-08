@@ -25,6 +25,7 @@ volatile uint8_t keyVal[8][8] =
     { 24, 11, 44, 82, 86, 92, 96,  0 }//U    H     SPACE UP -      4      8
 };
 
+volatile uint8_t keyStat[8] = {0,0,0,0,0,0,0,0};
 volatile uint8_t fifo_head = 0;
 volatile uint8_t fifo_tail = 0;
 volatile uint8_t fifo_count = 0;
@@ -166,7 +167,7 @@ void read_keys(void){
         ROW_LOW(r);//set the pin low to start
         for(c=0;c<8;c++){
             //log the change
-            bitWrite(i2c_regs[r+CL32_RAW_ROW0], c, (COL_READ(c)) );
+            bitWrite(keyStat[r], c, (COL_READ(c)) );
         }
         ROW_HIGH(r);//set it high to tidy up
     }
@@ -181,7 +182,7 @@ void check_keys(void){
     for(r=0;r<8;r++){
         ROW_LOW(r);//set the pin low to start
         for(c=0;c<8;c++){
-            if(bitRead(i2c_regs[r+CL32_RAW_ROW0],c) != COL_READ(c) ){//state change
+            if(bitRead(keyStat[r],c) != COL_READ(c) ){//state change
                 //add event
                 if(is_on()){//only log it if we are on
                     temp = keyVal[r][c];//get the key value//
@@ -195,7 +196,7 @@ void check_keys(void){
                     changeCount++;
                 }
                 //log the change
-                bitWrite(i2c_regs[r+CL32_RAW_ROW0], c, (COL_READ(c)) );
+                bitWrite(keyStat[r], c, (COL_READ(c)) );
             }
         }
         ROW_HIGH(r);//set it high to tidy up
@@ -205,7 +206,7 @@ void check_keys(void){
         set_i2c_flag();
         BLcount = 0;
     }
-    if(bitRead(i2c_regs[CL32_RAW_ROW1],4)==0 && bitRead(i2c_regs[CL32_RAW_ROW2],2)==0){
+    if(bitRead(keyStat[1],4)==0 && bitRead(keyStat[2],2)==0){
         killCount++;
     }
     else{
